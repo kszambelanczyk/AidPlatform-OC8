@@ -24,5 +24,15 @@ test:
   database: aid_test
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  database: d8u86rdjq9s7ba
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: postgis
+  encoding: unicode
+  url: <%= ENV.fetch('DATABASE_URL', '').sub(/^postgres/, "postgis") %>
+  database: d8u86rdjq9s7ba
+  username: klaxohkbhirkaa
+  password: <%= ENV['databasename_DATABASE_PASSWORD'] %>
