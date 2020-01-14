@@ -2,14 +2,58 @@
 <html>
   <head>
     <title>AidPlatform</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+
+
+    <section id="top-home">
+      <%= render "shared/header", container_class: "container-fluid" %>
+    </section>
+
+
+    <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <h2 class="mt-5 mb-4">About Thank.You</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Morbi leo urna molestie at elementum eu facilisis sed. 
+              Amet facilisis magna etiam tempor orci eu lobortis elementum. Neque viverra justo nec ultrices dui. Morbi enim nunc faucibus a.
+              Lorem dolor sed viverra ipsum nunc aliquet bibendum enim. Purus sit amet volutpat consequat mauris nunc. 
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="image-spacer">
+
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <h2 class="mt-5 mb-4">Contact</h2>
+            <p>ffddfdfdf</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </body>
 </html>

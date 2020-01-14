@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AidPlatform main</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <%= javascript_pack_tag 'main-app' %>
+
+  </head>
+
+  <body class="devise">
+
+    <section>
+
+      <%= render "shared/header", container_class: "container" do %>
+        <a class="navbar-brand" href="/">
+          Thank.You
+        </a>
+      <%end%>
+
+    </section>
+
+    <section id="main">
+      <div class="container-fluid" id="main-app">
+        
+      </div>
+    </section>
+
+
+  </body>
+</html>

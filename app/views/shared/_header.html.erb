@@ -1,0 +1,32 @@
+<div class="header">      
+  <nav class="navbar navbar-expand-md">
+    <div class="<%= container_class %>">
+      <%= yield %>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="Navbar">
+        <ul class="navbar-nav ml-auto ">
+
+          <%if user_signed_in?%>
+            <li class="nav-item <%= 'active' if current_page?(main_index_path) %>"><%= link_to "Dashboard", main_index_path, class: "nav-link" %></li>
+          <%else%>
+            <li class="nav-item"><%= link_to "Log in", new_user_session_path, class: "nav-link" %></li>
+          <%end%>
+          <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contact</a></li>
+          <%if user_signed_in?%>
+            <li class="nav-item">
+              <%= link_to destroy_user_session_path, class: "nav-link", :method => :delete do %>
+                Log out
+              <% end %>
+            </li>
+          <% end %>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

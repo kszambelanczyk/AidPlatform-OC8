@@ -1,0 +1,114 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+
+@import "bootstrap/scss/bootstrap";
+
+$bgcolor: #f4f3ef;
+$color1: #E9EBF0;
+$color2: #D5B794;
+$color3: #7E5333;
+$color4: #442E26;
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+}
+
+#top-home {
+    position: relative;
+    background-image: url(/images/2.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+
+    border-bottom-style: solid;
+    border-bottom-color: $color1;
+    border-bottom-width: 1px;
+
+    height: 800px;
+}
+
+.navbar {
+    color: black;
+    .nav-item {
+        padding: 0 10px;
+    }
+    a.nav-link {
+        font-size: 1.2rem;
+        color: $color4;
+        &:hover {
+            color: $color3;
+        }
+    }
+}
+
+.devise {
+    background-color: $bgcolor;
+    a.navbar-brand {
+        font-size: 2rem;
+        color: $color4;
+        &:hover {
+            color: $color4;
+        }
+    }
+
+    #login {
+        margin-top: 30px;
+        .login-links {
+            a{
+
+            }
+        }
+    }
+    .btn-submit {
+        background-color: #D5B794;
+    }
+}
+
+#image-spacer {
+    position: relative;
+    background-image: url(/images/bg3.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+
+    height: 500px;
+}
+
+#contact {
+    background-color:#442E26;
+    color: $color1;
+}
+
+.login-links {
+    margin-top: 1rem;
+    a {
+        margin-right: 1rem;
+        color: $color4;
+        &:hover {
+            color: $color4;
+        }
+    }
+}
+
+#example-map {
+}
