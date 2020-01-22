@@ -8,15 +8,20 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.2.2",
     "@react-google-maps/api": "^1.8.1",
+    "axios": "^0.19.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.4.1",
     "dotenv": "^8.2.0",
+    "formik": "^2.1.2",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.0",
     "prop-types": "^15.7.2",
+    "query-string": "^6.10.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "turbolinks": "^5.2.0"
+    "react-router-dom": "^5.1.2",
+    "turbolinks": "^5.2.0",
+    "yup": "^0.28.0"
   },
   "version": "0.1.0",
   "devDependencies": {

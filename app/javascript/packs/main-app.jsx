@@ -6,12 +6,15 @@ require('dotenv').config()
 import React from 'react'
 import ReactDOM from 'react-dom'
 // import PropTypes from 'prop-types'
-import Map from './components/map'
+import { BrowserRouter as Router } from 'react-router-dom';
+import Main from './components/Main'
 
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Map name="React" />,
+    <Router basename="/main">
+      <Main />
+    </Router>,
     document.getElementById('main-app'),
   )
 })

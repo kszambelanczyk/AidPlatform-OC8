@@ -11,7 +11,7 @@
         <ul class="navbar-nav ml-auto ">
 
           <%if user_signed_in?%>
-            <li class="nav-item <%= 'active' if current_page?(main_index_path) %>"><%= link_to "Dashboard", main_index_path, class: "nav-link" %></li>
+            <li class="nav-item <%= 'active' if current_page?(main_path) %>"><%= link_to "Dashboard", main_path, class: "nav-link" %></li>
           <%else%>
             <li class="nav-item"><%= link_to "Log in", new_user_session_path, class: "nav-link" %></li>
           <%end%>

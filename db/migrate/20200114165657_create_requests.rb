@@ -4,6 +4,7 @@ class CreateRequests < ActiveRecord::Migration[6.0]
       t.string :request_type
       t.string :title
       t.text :description
+      t.text :address
       t.st_point :lnglat, geographic: true
     
       t.boolean :fulfilled, :default => false

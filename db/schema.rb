@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_14_165657) do
+ActiveRecord::Schema.define(version: 2020_01_21_193513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2020_01_14_165657) do
     t.string "request_type"
     t.string "title"
     t.text "description"
+    t.text "address"
     t.geography "lnglat", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.boolean "fulfilled", default: false
     t.bigint "requester_id"
@@ -40,5 +41,16 @@ ActiveRecord::Schema.define(version: 2020_01_14_165657) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "volunteer_to_requests", force: :cascade do |t|
+    t.bigint "request_id"
+    t.bigint "volunteer_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["request_id"], name: "index_volunteer_to_requests_on_request_id"
+    t.index ["volunteer_id"], name: "index_volunteer_to_requests_on_volunteer_id"
+  end
+
   add_foreign_key "requests", "users", column: "requester_id"
+  add_foreign_key "volunteer_to_requests", "requests"
+  add_foreign_key "volunteer_to_requests", "users", column: "volunteer_id"
 end

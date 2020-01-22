@@ -8,10 +8,12 @@ Rails.application.routes.draw do
   get 'about', to: "entry#about"
   get 'contact', to: "entry#contact"
 
-  get 'main/index', to: "main#index"
+  get 'main', to: "main#index"
+  get 'main/*other', to: "main#index"
 
   namespace :api do
     resources :requests
+    get 'map_requests', to: "requests#map_requests"
   end
 
 
