@@ -69,9 +69,9 @@ class Api::RequestsController < ApplicationController
 
     pos = params.require(:request).permit(
       :lat,
-      :lon,
+      :lng,
     )
-    data[:lnglat] = "POINT(#{pos[:lon]} #{pos[:lat]})" 
+    data[:lnglat] = "POINT(#{pos[:lng]} #{pos[:lat]})" 
 
     return data
   end
