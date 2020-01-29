@@ -58,6 +58,19 @@ class Api::RequestsController < ProtectedController
   end
 
 
+  def destroy
+    request = Request.find(params[:id])
+
+    if(request.requester_id!=current_user.id)
+      raise ActionController::Forbidden
+    end
+
+    unless request.destroy
+      render json: { errors:  request.errors }, status: :unprocessable_entity
+      return
+    end
+  end
+
   private
   def request_params
     data = params.require(:request).permit(

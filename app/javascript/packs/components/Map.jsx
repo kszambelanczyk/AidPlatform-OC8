@@ -11,6 +11,8 @@ import Pusher from 'pusher-js';
 // import 'simplebar/dist/simplebar.min.css';
 
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api'
+import Modal from 'simple-react-modal'
+
 
 class Map extends React.Component {
   state = {
@@ -23,6 +25,8 @@ class Map extends React.Component {
       lng_l: null
     },
     requestSelected: null,
+    requestForDetail: null,
+    infoWindowOpen: false,
     requestsTotal: 0
   };
 
@@ -81,10 +85,6 @@ class Map extends React.Component {
     this.map.setCenter({lat: current_lat, lng: current_lng});
     this.map.setZoom(current_zoom);
 
-    this.infoWindow = new google.maps.InfoWindow({
-      position: { lat: 52.3560, lng: 17.007 }
-    });
-
   }
 
   onMapIdle = () => {
@@ -115,28 +115,37 @@ class Map extends React.Component {
   }
 
   markerClicked = (request) => {
-    this.setState(()=>({requestSelected: request}));
-    const content = `<div>test</div>`
-
-    this.infoWindow.setContent(content);
-    this.infoWindow.setPosition({ lat: request.lat, lng: request.lng });
-    this.infoWindow.open(this.map);
-
+    this.setState(()=>({
+      requestSelected: request,
+      infoWindowOpen: true,
+    }));
   }
 
-  openInfoWindow = (request) => {
-    if(this.infoWindow) {
-      this.infoWindow.position = { lat: request.lat, lng: request.lng };
-      this.infoWindow.open();
-    }
+  handleInfoWindowClose = () => {
+    this.setState(()=>({infoWindowOpen: false}));
+  }
+
+  handleRequestDetail = (request) => {
+    this.setState(()=>({requestForDetail: request}));
+  }
+
+  closeDetailsModal = () => {
+    this.setState(()=>({requestForDetail: null}));
   }
 
   render() {
-    const { requests, requestsTotal, requestSelected } = this.state;
+    const { requests, requestsTotal, requestSelected, requestForDetail, infoWindowOpen } = this.state;
 
     const markerList =  requests.map((r)=> 
       <Marker key={r.id} position={{ lat: r.lat, lng: r.lng }} onClick={()=>{ this.markerClicked(r) }}/>
     );
+
+    let infoWindowContent;
+    if(requestSelected) {
+      infoWindowContent = (
+        <div>{ requestSelected.title }</div>
+      );
+    }
 
     return (
       <>
@@ -159,13 +168,23 @@ class Map extends React.Component {
 
             {markerList}
 
-            {/* <InfoWindow onLoad={()=>{this.infoWindowOnLoad()}} position={{ lat: 52.3560, lng: 17.007 }}>
-              <div>title</div>
-            </InfoWindow> */}
+            { (infoWindowOpen && requestSelected) &&
+              <InfoWindow onCloseClick={this.handleInfoWindowClose} position={{ lat: requestSelected.lat, lng: requestSelected.lng }}>
+                <>
+                  <div>{requestSelected.title}</div>
+                  <a onClick={ () => { this.handleRequestDetail(requestSelected) } }>details</a>
+                </>
+              </InfoWindow>
+            }
 
             </GoogleMap>
           </LoadScript>
+          
+          <Modal style={{background: 'rgba(0, 0, 0, 0.5)'}} containerClassName="test" show={requestForDetail ? true : false} onClose={this.closeDetailsModal}>
+            <div>hey, click outside of me to close me!</div>
+          </Modal>
 
+          
         </div>
       </>
     );

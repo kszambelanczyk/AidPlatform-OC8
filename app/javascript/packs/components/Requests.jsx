@@ -6,20 +6,29 @@ import { withRouter } from 'react-router';
 class Requests extends React.Component {
   state = {
     showFulfilled: false,
-    loading: false,
+    loadingRequests: false,
+    loadingVolunteers: false,
     requests: [],
-    volunteers: []
+    volunteers: [],
+    crf: '',
   };
 
   componentDidMount() {
+    const crf =  document.getElementsByName("csrf-token")[0].getAttribute("content");
+    this.setState(()=>({crf: crf}));
+
     this.loadRequests();
   }
 
   loadRequests = () => {
+    this.setState(()=>({loadingRequests: true}));
     try {
       axios.get(`/api/requests`)
       .then(res => {
         this.setState(()=>({requests: [...res.data.requests]}));
+        this.setState(()=>({loadingRequests: false}));
+      }, ()=>{
+        this.setState(()=>({loadingRequests: false}));
       });
     } 
     catch(error) {
@@ -48,36 +57,43 @@ class Requests extends React.Component {
     this.deleteRequest(r.id);
   }
 
-  deleteRequest = (requestId) => {
+  deleteRequest = async (requestId) => {
+    const { crf } = this.state;
+    this.setState(()=>({loadingRequests: true}));
     try {
-      axios.delete(`/api/requests/${requestId}`)
-      .then(res => {
-        this.loadRequests();
-      });
+      await axios.delete(`/api/requests/${requestId}`, { headers: {'X-CSRF-Token': crf } })
+        .then(res => {
+          this.setState(()=>({loadingRequests: false}));
+          this.loadRequests();
+        }, ()=>{
+          this.setState(()=>({loadingRequests: false}));
+        });
     } 
     catch(error) {
       console.error(error);
-    }
+    } 
   }
 
   render() {
-    const { requests } = this.state;
+    const { requests, loadingRequests } = this.state;
+
     const reqestRows = requests.map((r)=> 
-      <div key={r.id} className="request-row">
-        <div>{r.id}</div>
-        <div><a onClick={() => {this.requestEditClicked(r)}}>{r.title}</a></div>
+      <div key={ r.id } className="request-row">
+        <div>{ r.id }</div>
+        <div><a onClick={() => {this.requestEditClicked(r)}}>{ r.title }</a></div>
         <div><a onClick={() => {this.requestDeleteClicked(r)}}>delete</a></div>
       </div>
     );
   
-    const { location } = this.props;
+    // const { location } = this.props;
     return (
       <>
         <section id="requests">
           <div className="container">
             <p>My requests</p>
             <div className="requests-grid">
-              {reqestRows}
+              { reqestRows }
+              { loadingRequests ? 'loading' : '' }
             </div>
             <p>My volunteering</p>
 
