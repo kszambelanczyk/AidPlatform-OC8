@@ -757,6 +757,18 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@iconify/icons-fa-solid@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-fa-solid/-/icons-fa-solid-1.0.6.tgz#18d81621746aee46451afcbf4eebaaf750a17964"
+  integrity sha512-0Jie6wiK20svJ/HbeH8tty4fodul6iy7RGebVebl0A616jvZ5DBnj9la3y3h4WCEtXIM4vQlQwivSP20PWl4Yg==
+
+"@iconify/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@iconify/react/-/react-1.1.1.tgz#38526508f722e0b617723d79209bb1e6d8c59c61"
+  integrity sha512-BRbPW/vkyWi6n2dHx4O8Cp0RKeI4KsxieLZ+UcyknCkk1IVxii5IassCIKHJ3jWB6s6uLAWq5EnHJniI7er9+w==
+  dependencies:
+    react "^16.8.3"
+
 "@rails/actioncable@^6.0.0":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.0.2.tgz#bcba9bcd6ee09a47c6628336e07399a68ca87814"
@@ -5936,6 +5948,11 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
+pusher-js@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/pusher-js/-/pusher-js-5.0.3.tgz#22c62d0a094ed23f356d3a18aef360a5aacb1bd6"
+  integrity sha512-vbaflcd8LYaErJ0LrXZyLQ+meMuD3N2kl9hXUrj22VZLsKyfRFbXS3eCb6/2erQLFeHcnbkWPyBvxya+706+zw==
+
 q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
@@ -6062,7 +6079,7 @@ react-router@5.1.2:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react@^16.12.0:
+react@^16.12.0, react@^16.8.3:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
   integrity sha512-fglqy3k5E+81pA8s+7K0/T3DBCF0ZDOher1elBFzF7O6arXJgzyu/FW+COxFvAWXJoJN9KIZbT2LXlukwphYTA==

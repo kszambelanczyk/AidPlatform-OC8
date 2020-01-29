@@ -29,9 +29,7 @@ class Requests extends React.Component {
 
   loadVolunteers = () => {
     try {
-      axios.get(`/api/volunteers`,{
-
-      })
+      axios.get(`/api/volunteers`,{})
       .then(res => {
         this.setState(()=>({volunteers: [...res.data.volunteers]}));
       });
@@ -41,9 +39,25 @@ class Requests extends React.Component {
     }
   }
 
-  requestClicked = (r) => {
+  requestEditClicked = (r) => {
     const { history } = this.props;
     history.push(`/edit_request/${r.id}`);
+  }
+
+  requestDeleteClicked = (r) => {
+    this.deleteRequest(r.id);
+  }
+
+  deleteRequest = (requestId) => {
+    try {
+      axios.delete(`/api/requests/${requestId}`)
+      .then(res => {
+        this.loadRequests();
+      });
+    } 
+    catch(error) {
+      console.error(error);
+    }
   }
 
   render() {
@@ -51,7 +65,8 @@ class Requests extends React.Component {
     const reqestRows = requests.map((r)=> 
       <div key={r.id} className="request-row">
         <div>{r.id}</div>
-        <div><a onClick={() => {this.requestClicked(r)}}>{r.title}</a></div>
+        <div><a onClick={() => {this.requestEditClicked(r)}}>{r.title}</a></div>
+        <div><a onClick={() => {this.requestDeleteClicked(r)}}>delete</a></div>
       </div>
     );
   

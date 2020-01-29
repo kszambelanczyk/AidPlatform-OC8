@@ -4,5 +4,6 @@ json.(request,
   :description,
   :lat,
   :lng,
-  :address
+  :address,
+  :request_type
   )

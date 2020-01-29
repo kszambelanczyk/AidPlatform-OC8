@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
+import Pusher from 'pusher-js';
 
 // import SimpleBar from 'simplebar-react';
 // import { Icon } from '@iconify/react';
@@ -22,11 +23,26 @@ class Map extends React.Component {
       lng_l: null
     },
     requestSelected: null,
-
+    requestsTotal: 0
   };
+
+
+  componentDidMount() {
+    const pusher = new Pusher('9bee2ff5f008f8eb221f', {
+      cluster: 'eu',
+      encrypted: true
+    });
+    this.channel = pusher.subscribe('map_status');
+    this.channel.bind('reqest_count_change', data => {
+      this.setState(()=>({ requestsTotal: data.message }));
+    });
+  }
+
 
   componentWillUnmount() {
     this.props.storeLastPos(this.map.getCenter().lat(), this.map.getCenter().lng(), this.map.getZoom());
+
+    this.channel.unbind_all();
   }
 
   componentDidUpdate(prevProps) {
@@ -46,7 +62,10 @@ class Map extends React.Component {
         lng_h: bounds.lng_h,
         lng_l: bounds.lng_l
       }});
-      this.setState(()=>({requests: result.data.requests}));
+      this.setState(()=>({
+        requests: result.data.requests,
+        requestsTotal: result.data.requests_count
+      }));
     } 
     catch(error) {
       console.error(error);
@@ -58,17 +77,26 @@ class Map extends React.Component {
     this.map = m;
 
     const { current_lat, current_lng, current_zoom } = this.props;
+
     this.map.setCenter({lat: current_lat, lng: current_lng});
     this.map.setZoom(current_zoom);
+
+    this.infoWindow = new google.maps.InfoWindow({
+      position: { lat: 52.3560, lng: 17.007 }
+    });
+
   }
 
   onMapIdle = () => {
     const bounds = this.map.getBounds();
+    if(!bounds) {
+      return;
+    }
     const b1 = { 
-      lat_h: bounds.pa.h,
-      lat_l: bounds.pa.g,
-      lng_h: bounds.ka.h,
-      lng_l: bounds.ka.g
+      lat_h: bounds.getNorthEast().lat(),
+      lat_l: bounds.getSouthWest().lat(),
+      lng_h: bounds.getNorthEast().lng(),
+      lng_l: bounds.getSouthWest().lng()
     }
     const { bounds:b2 } = this.state;
     if(b1.lat_h===b2.lat_h && b1.lat_l===b2.lat_l && b1.lng_h===b2.lng_h && b1.lng_l===b2.lng_l){
@@ -77,10 +105,10 @@ class Map extends React.Component {
     this.loadRequests(b1).then(()=>{
       this.setState(()=>({
         bounds: {
-          lat_h: bounds.pa.h,
-          lat_l: bounds.pa.g,
-          lng_h: bounds.ka.h,
-          lng_l: bounds.ka.g    
+          lat_h: bounds.getNorthEast().lat(),
+          lat_l: bounds.getSouthWest().lat(),
+          lng_h: bounds.getNorthEast().lng(),
+          lng_l: bounds.getSouthWest().lng()
         }
       }));
     });
@@ -88,6 +116,12 @@ class Map extends React.Component {
 
   markerClicked = (request) => {
     this.setState(()=>({requestSelected: request}));
+    const content = `<div>test</div>`
+
+    this.infoWindow.setContent(content);
+    this.infoWindow.setPosition({ lat: request.lat, lng: request.lng });
+    this.infoWindow.open(this.map);
+
   }
 
   openInfoWindow = (request) => {
@@ -96,36 +130,20 @@ class Map extends React.Component {
       this.infoWindow.open();
     }
   }
-  // infoWindowCloseBtnClicked = () => {
-  //   setState(()=>({requestSelected: null}));
-  // }
-
-  infoWindowOnLoad = (infoWindow) => {
-    this.infoWindow = infoWindow;
-    this.infoWindow.close();
-  }
 
   render() {
-    const { requests, requestSelected } = this.state;
+    const { requests, requestsTotal, requestSelected } = this.state;
 
     const markerList =  requests.map((r)=> 
       <Marker key={r.id} position={{ lat: r.lat, lng: r.lng }} onClick={()=>{ this.markerClicked(r) }}/>
     );
-
-    // let infoWindowContent;
-    // if(requestSelected){
-    //   infoWindowContent = (
-    //     <div>
-    //       <h4>{requestSelected.title}</h4>
-    //     </div>
-    //   );
-    // }
 
     return (
       <>
         <div>
           <div className="map-menu">
             Map menu
+            Unfulfilled requests: {requestsTotal}
           </div>
           <LoadScript id="script-loader"
             googleMapsApiKey={ process.env.MAP_API }>
@@ -141,7 +159,7 @@ class Map extends React.Component {
 
             {markerList}
 
-            {/* <InfoWindow onLoad={()=>{this.infoWindowOnLoad()}}>
+            {/* <InfoWindow onLoad={()=>{this.infoWindowOnLoad()}} position={{ lat: 52.3560, lng: 17.007 }}>
               <div>title</div>
             </InfoWindow> */}
 

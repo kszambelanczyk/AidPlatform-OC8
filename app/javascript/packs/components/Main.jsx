@@ -18,6 +18,7 @@ import Map from './Map';
 import Requests from './Requests';
 import NewRequest from './NewRequest';
 import EditRequest from './EditRequest';
+import Account from './Account';
 
 
 class Main extends React.Component {
@@ -29,8 +30,17 @@ class Main extends React.Component {
     geolocated_lng: 32,
     geolocationFinished: false,
     notification: '',
-    showNotifcation: false,
-  };
+    showNotification: false,
+    avatarImg: null,
+    avatarImgThumb25: null,
+    avatarImgThumb50: null,
+    avatarImgThumb128: null,
+    avatarImg: preloadedData.avatar_img_url,
+    avatarImgThumb25: preloadedData.avatar_img_25_url,
+    avatarImgThumb50: preloadedData.avatar_img_50_url,
+    avatarImgThumb128: preloadedData.avatar_img_128_url
+};
+
 
   componentDidMount() {
     this.getCurrentLocation().then((pos) => {
@@ -45,6 +55,19 @@ class Main extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      this.onRouteChanged();
+    }
+  }
+
+  onRouteChanged() {
+    this.setState(() => ({ 
+      showNotification: false,
+      notification: ''
+    }));
+  }  
+
   getCurrentLocation = () => {
     return new Promise(function(resolve, reject) {
       // Try HTML5 geolocation.
@@ -55,7 +78,7 @@ class Main extends React.Component {
             lng: position.coords.longitude
           };
           resolve(pos);
-        }, function() {
+        }, function(e) {
           reject(new Error("geolocation error"));
         });
       } else {
@@ -74,26 +97,32 @@ class Main extends React.Component {
 
   handleNotification = (text) => {
     this.setState(()=>({
-      showNotifcation: false,
+      showNotification: true,
       notification: text
     }));
   }
 
   closeNotification = () => {
-    this.setState(()=>({showNotifcation: false}));
+    this.setState(()=>({showNotification: false}));
+  }
+
+  avatarChanged = (avatarData) => {
+    const { avatar_img_url, avatar_img_25_url, avatar_img_50_url, avatar_img_128_url } = avatarData;
+    this.setState(()=>({
+      avatarImg: avatar_img_url,
+      avatarImgThumb25: avatar_img_25_url,
+      avatarImgThumb50: avatar_img_50_url,
+      avatarImgThumb128: avatar_img_128_url 
+    }));
   }
 
   render() {
     const { location } = this.props;
     const { current_lat, current_lng, geolocated_lat, geolocated_lng, current_zoom, geolocationFinished } = this.state; 
-    const { notification, showNotifcation } = this.state;
-
-    const contextValue = {
-      handleFunc: this.contextFunc
-    }
+    const { notification, showNotification, avatarImgThumb128, avatarImgThumb50 } = this.state;
 
     let notificationEl;
-    if(showNotifcation){
+    if(showNotification){
       notificationEl = (
         <div className="notification">
           {notification}
@@ -104,14 +133,14 @@ class Main extends React.Component {
 
     return (
       <>
-        <Header />
+        <Header avatarUrl={avatarImgThumb50}/>
         {notificationEl}
         <Switch location={location}>
           <Route exact path="/">
             <Map current_lat={current_lat} 
-                geolocationFinished={geolocationFinished}
                 current_lng={current_lng} 
                 current_zoom={current_zoom} 
+                geolocationFinished={geolocationFinished}
                 storeLastPos={this.storeLastPos} />
           </Route>
           <Route exact path="/requests">
@@ -132,6 +161,12 @@ class Main extends React.Component {
           <Route exact path="/messages">
             Messages
           </Route>
+
+          <Route exact path="/account">
+            <Account handleNotification={this.handleNotification} avatarChanged={this.avatarChanged} avatarUrl={avatarImgThumb128} />
+
+          </Route>
+
         </Switch>
       </>
     );

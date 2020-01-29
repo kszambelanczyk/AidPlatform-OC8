@@ -20,6 +20,7 @@ const RequestSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(300, 'Too Long!')
     .required('Required'),
+  request_type: Yup.string().oneOf(['one_time_task', 'material_need'])
 });
 
 class RequestForm extends React.Component {
@@ -70,9 +71,6 @@ class RequestForm extends React.Component {
           },
           headers: {'X-CSRF-Token': crf}
         })
-        // axios.post(`/api/requests`,{
-        //   request: params
-        // }, {headers: {'X-CSRF-Token': crf}})
         .then(res => {
           this.setState(()=>({isSubmitting: false, successfullySubmitted: true}));
           actions.setSubmitting(false);
@@ -109,6 +107,15 @@ class RequestForm extends React.Component {
               <div className="form-group">
                 <label htmlFor="description">Description</label>
                 <Field name="description" component="textarea" className="form-control" />
+                <ErrorMessage name="description" component="div" className="text-danger"/>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Request type</label>
+                <Field name="request_type" component="select" className="custom-select">
+                  <option value="one_time_task">One time task</option>
+                  <option value="material_need">Material need</option>
+                </Field>
                 <ErrorMessage name="description" component="div" className="text-danger"/>
               </div>
 

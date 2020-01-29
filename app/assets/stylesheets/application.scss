@@ -50,6 +50,9 @@ body {
     border-bottom: #e7e0d5 1px solid;
     .navbar {
         color: black;
+        .navbar-nav {
+            align-items: center;
+        }
         .nav-item {
             padding: 0 10px;
         }
@@ -144,7 +147,7 @@ body {
 
     .request-row {
         display: grid;
-        grid-template-columns: 50px auto;
+        grid-template-columns: 50px auto 60px;
         grid-column-gap: 1rem;
         div {
             font-size: 1.1rem;
@@ -162,4 +165,12 @@ body {
             }
         }
     }
+}
+
+.img-circle {
+    border-radius: 100%;
+}
+
+.header-avatar-img {
+    height: 40px;
 }

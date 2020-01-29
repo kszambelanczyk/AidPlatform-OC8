@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
+
+  # devise_for :users, controllers: { passwords: 'users/passwords' }
+
   get 'entry/index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -14,6 +17,15 @@ Rails.application.routes.draw do
   namespace :api do
     resources :requests
     get 'map_requests', to: "requests#map_requests"
+
+    resource :user do
+      collection do
+        patch 'update_password'
+        post 'avatar'
+      end
+    end
+
+
   end
 
 

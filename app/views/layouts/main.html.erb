@@ -20,5 +20,10 @@
 
   <body>
     <div id="main-app"></div>
+
+    <script>
+      window.preloadedData = <%= raw @preloaded_data.to_json %>
+    </script>
+
   </body>
 </html>

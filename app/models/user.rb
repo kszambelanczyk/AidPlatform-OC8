@@ -9,5 +9,9 @@ class User < ApplicationRecord
   has_many :volunteer_to_requests, foreign_key: "volunteer_id", dependent: :destroy
   has_many :volunteer_requests, through: :volunteer_to_requests, class_name: 'Request', source: :request
 
+  mount_uploader :id_document, IdDocumentUploader
+  mount_uploader :avatar, AvatarUploader
+
+  validates :id_document, presence: true
 
 end

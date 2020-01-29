@@ -12,7 +12,8 @@ class NewRequest extends React.Component {
       description: "",
       address: "",
       lat: geolocated_lat,
-      lng: geolocated_lng
+      lng: geolocated_lng,
+      request_type: 'one_time_task',
     }
 
     return (

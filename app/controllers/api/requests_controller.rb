@@ -1,4 +1,4 @@
-class Api::RequestsController < ApplicationController
+class Api::RequestsController < ProtectedController
 
 
   def map_requests
@@ -9,19 +9,12 @@ class Api::RequestsController < ApplicationController
     end
 
     sql = "SELECT * FROM requests WHERE
+      fulfilled IS FALSE AND
       requests.lnglat && ST_MakeEnvelope(#{params[:lng_h]}, #{params[:lat_l]}, #{params[:lng_l]}, #{params[:lat_h]}, 4326)"
 
     @requests = Request.find_by_sql(sql)
 
-    # sql = "SELECT row_to_json(fc)
-    #       FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
-    #           FROM (SELECT 'Feature' As type, ST_AsGeoJSON(lg.latlon, 6)::json As geometry
-    #               , row_to_json((SELECT l FROM (SELECT id, plan_id, schema_element_id) As l)) As properties
-    #             FROM network_locations As lg WHERE
-    #             plan_id=#{@network.plan_id} AND schema_element_id=#{@network.id} AND
-    #             lg.latlon && ST_MakeEnvelope(#{south_west[:lng]}, #{south_west[:lat]}, #{north_east[:lng]}, #{north_east[:lat]}, 4326)
-    #             ) As f) As fc;"
-
+    @requests_count = Request.not_fulfilled.count
 
     render :index
   end
@@ -32,6 +25,8 @@ class Api::RequestsController < ApplicationController
 
   def index
     @requests = Request.where('requester_id=?', current_user.id)
+    @requests_count = @requests.count
+
   end
 
   def create
@@ -41,6 +36,10 @@ class Api::RequestsController < ApplicationController
     unless @request.save
       format.json { render json: @request.errors, status: :unprocessable_entity }
     end
+
+    Pusher.trigger('map_status', 'reqest_count_change', {
+      message: Request.not_fulfilled.count
+    })
 
     render :show
   end
@@ -65,6 +64,7 @@ class Api::RequestsController < ApplicationController
       :title,
       :description,
       :address,
+      :request_type,
     )
 
     pos = params.require(:request).permit(

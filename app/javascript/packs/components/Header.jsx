@@ -1,5 +1,8 @@
 import React from 'react';
 // import axios from 'axios';
+import { Icon, InlineIcon } from '@iconify/react';
+import userCircle from '@iconify/icons-fa-solid/user-circle';
+
 import {
   Link
 } from "react-router-dom";
@@ -21,8 +24,20 @@ class Header extends React.Component {
   //   });
   // }
 
-  render() {
 
+  render() {
+    const { avatarUrl } = this.props; 
+    let userIcon;
+    if(avatarUrl){
+      userIcon = (
+        <img src={avatarUrl} className="img-circle header-avatar-img"/>
+      )
+    } else {
+      userIcon = (
+        <Icon icon={userCircle} />
+      )
+    }
+  
     return (
       <section>
         <div className="header">      
@@ -51,12 +66,21 @@ class Header extends React.Component {
                     </div>
                   </li>
                   <li className="nav-item"><Link to="/messages" className="nav-link">Messages</Link></li>
-                  {/* <li className="nav-item"><a onClick={ this.logOut } className="nav-link" >Log out</a></li> */}
-                  <li className="nav-item">
-                    <a className="nav-link" rel="nofollow" data-method="delete" href="/users/sign_out">
-                      Log out
+
+                  <li className="nav-item dropdown">
+                    <a  className="nav-link" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {userIcon}
                     </a>
+
+                    <div className="dropdown-menu" aria-labelledby="navbarDropdown2">
+                      <Link to="/account" className="dropdown-item">Account</Link>
+                      <a className="dropdown-item" rel="nofollow" data-method="delete" href="/users/sign_out">
+                        Log out
+                      </a>
+                    </div>
+
                   </li>
+
                 </ul>
               </div>
             </div>
