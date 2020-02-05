@@ -16,6 +16,7 @@ import { withRouter } from 'react-router';
 import Header from './Header';
 import Map from './Map';
 import Requests from './Requests';
+import Volunteering from './Volunteering';
 import NewRequest from './NewRequest';
 import EditRequest from './EditRequest';
 import Account from './Account';
@@ -158,6 +159,11 @@ class Main extends React.Component {
                     geolocated_lng={geolocated_lng}
                     handleNotification={this.handleNotification}/>
           </Route>
+          <Route path="/volunteering">
+            <Volunteering />
+          </Route>
+
+
           <Route path="/messages">
             Messages
           </Route>

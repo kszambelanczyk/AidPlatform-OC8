@@ -62,7 +62,7 @@ class Header extends React.Component {
                       <Link to="/requests" className="dropdown-item">Requests</Link>
                       <Link to="/new_request" className="dropdown-item">New request</Link>
                       <div className="dropdown-divider"></div>
-                      <Link to="/helps" className="dropdown-item">My helps</Link>
+                      <Link to="/volunteering" className="dropdown-item">Volunteering</Link>
                     </div>
                   </li>
                   <li className="nav-item"><Link to="/messages" className="nav-link">Messages</Link></li>

@@ -31,4 +31,12 @@ class Request < ApplicationRecord
     user.id==self.requester_id
   end
 
+  def shuold_be_unpublished
+    if(self.fulfilled)
+      return true      
+    end
+    # self.revolunteer_to_requests
+
+  end
+
 end

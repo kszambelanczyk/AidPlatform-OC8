@@ -104,14 +104,13 @@ class Api::RequestsController < ProtectedController
 
   def volunteering_requests
 
-    @requests = Request.select("requests.*, c1.created_at as volunteer_date")
+    @requests = Request.includes(:requester).select("requests.*, c1.created_at as volunteer_date")
       .joins("LEFT JOIN volunteer_to_requests as c1 ON c1.request_id = requests.id")
       .where("c1.volunteer_id=?", current_user.id)
       .order("c1.created_at DESC")
 
     @requests_count = current_user.volunteer_requests.count
 
-    render :index
   end
 
 
@@ -134,9 +133,8 @@ class Api::RequestsController < ProtectedController
   def toggle_fulfilled
     @request = Request.find(params[:id])
 
-    if (@request.requester_id == current_user.id)
-      render json: { errors:  ['Can not volunteer for your own request'] }, status: :unprocessable_entity
-      return
+    if(@request.requester_id!=current_user.id)
+      raise ActionController::Forbidden
     end
 
     @request.fulfilled = !@request.fulfilled
@@ -146,6 +144,7 @@ class Api::RequestsController < ProtectedController
       return
     end
 
+    render :show
   end
 
   private

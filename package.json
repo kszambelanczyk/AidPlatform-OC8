@@ -22,6 +22,7 @@
     "prop-types": "^15.7.2",
     "pusher-js": "^5.0.3",
     "query-string": "^6.10.0",
+    "rc-tooltip": "^4.0.0-alpha.3",
     "react": "^16.12.0",
     "react-confirm-alert": "^2.4.1",
     "react-dom": "^16.12.0",
