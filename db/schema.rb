@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_25_180802) do
+ActiveRecord::Schema.define(version: 2020_02_04_200020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_01_25_180802) do
     t.bigint "requester_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "published", default: true
     t.index ["requester_id"], name: "index_requests_on_requester_id"
   end
 
@@ -39,8 +40,10 @@ ActiveRecord::Schema.define(version: 2020_01_25_180802) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "avatar"
     t.string "id_document"
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "volunteer_to_requests", force: :cascade do |t|
@@ -48,6 +51,7 @@ ActiveRecord::Schema.define(version: 2020_01_25_180802) do
     t.bigint "volunteer_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "fulfilled", default: false
     t.index ["request_id"], name: "index_volunteer_to_requests_on_request_id"
     t.index ["volunteer_id"], name: "index_volunteer_to_requests_on_volunteer_id"
   end

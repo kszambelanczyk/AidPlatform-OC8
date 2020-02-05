@@ -13,8 +13,8 @@ const FormikAddress = (props) => {
   useEffect(() => {
     // geolocation finished and request is a new record and map loaded
     if(props.geolocationFinished && !values.id && mapInstance.current.map){
-      console.log(`Effect on ${values.lat} ${values.lng}`);
-      console.log(`Center after effect`);
+      // console.log(`Effect on ${values.lat} ${values.lng}`);
+      // console.log(`Center after effect`);
       centerMap({lat: values.lat, lng: values.lng});
       updateAddressFromLocation({lat: values.lat, lng: values.lng});
     }
@@ -37,7 +37,7 @@ const FormikAddress = (props) => {
 
   const doReverseGeocode = ({lat, lng}) => {
     setGeocoding(true);
-    console.log(`Geocoding on ${lat} ${lng}`);
+    // console.log(`Geocoding on ${lat} ${lng}`);
 
     return new Promise((resolve, reject) => {
       mapInstance.current.geocoder.geocode({location: {lat: lat, lng: lng}}, (results, status)=>{
@@ -65,14 +65,14 @@ const FormikAddress = (props) => {
     mapInstance.current.geocoder = new google.maps.Geocoder;
 
     if(props.geolocationFinished && !values.id){
-      console.log(`Center after map loaded for new`);
+      // console.log(`Center after map loaded for new`);
       centerMap({lat: values.lat, lng: values.lng});
       if(!values.id){
         updateAddressFromLocation({lat: values.lat, lng: values.lng});
       }
     } 
     if(values.id) {
-      console.log(`Center after map loaded for edit`);
+      // console.log(`Center after map loaded for edit`);
       centerMap({lat: values.lat, lng: values.lng});
     }
   }

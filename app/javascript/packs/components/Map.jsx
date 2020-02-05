@@ -40,6 +40,10 @@ class Map extends React.Component {
     this.channel.bind('reqest_count_change', data => {
       this.setState(()=>({ requestsTotal: data.message }));
     });
+
+    const crf =  document.getElementsByName("csrf-token")[0].getAttribute("content");
+    this.setState(()=>({crf: crf}));
+
   }
 
 
@@ -133,12 +137,59 @@ class Map extends React.Component {
     this.setState(()=>({requestForDetail: null}));
   }
 
+  volunteerToRequest = (request) => {
+    const { crf } = this.state;
+    const { handleNotification } = this.props;
+    const url = `/api/requests/${request.id}/sign_to_volunteer`;
+
+    const config = {
+      headers: {
+        'X-CSRF-Token': crf,
+      }
+    }
+
+    axios.post(url, {}, config)
+      .then(res => {
+        avatarChanged(res.data);
+        this.setState(()=>({
+          isFileSubmitting: false, 
+        }));
+        actions.setSubmitting(false);
+        handleNotification('Succefully volunteered to request');
+        actions.resetForm();
+      }, (error)=>{
+        actions.setSubmitting(false);
+        handleNotification('Volunteer failed');
+        this.setState(()=>({isFileSubmitting: false}));
+        console.error(error);
+      });
+  }
+
   render() {
     const { requests, requestsTotal, requestSelected, requestForDetail, infoWindowOpen } = this.state;
+    const markerList =  requests.map((r)=> {
+      let url;
+      if(r.request_type=='one_time_task'){
+        url = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+      } else {
+        url = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+      }
+      let size = 40;
+      if(r.is_my_request){
+        size = 30;
+      }
+      return (
+        <Marker key={r.id} 
+        position={{ lat: r.lat, lng: r.lng }} 
+        onClick={()=>{ this.markerClicked(r) }}
+        icon={{  
+          url: url, 
+          scaledSize: new google.maps.Size(size, size),
+          }}
+        />
+      );
+    });
 
-    const markerList =  requests.map((r)=> 
-      <Marker key={r.id} position={{ lat: r.lat, lng: r.lng }} onClick={()=>{ this.markerClicked(r) }}/>
-    );
 
     let infoWindowContent;
     if(requestSelected) {
@@ -180,10 +231,34 @@ class Map extends React.Component {
             </GoogleMap>
           </LoadScript>
           
-          <Modal style={{background: 'rgba(0, 0, 0, 0.5)'}} containerClassName="test" show={requestForDetail ? true : false} onClose={this.closeDetailsModal}>
-            <div>hey, click outside of me to close me!</div>
-          </Modal>
+          { requestForDetail && 
+            <Modal style={{background: 'rgba(0, 0, 0, 0.5)'}} 
+              containerClassName="request-detail-modal"
+              show={requestForDetail ? true : false}
+              onClose={this.closeDetailsModal}
+              containerStyle={{width: '600px'}}
+              >
+              <div className="header">
+                <div className="title">
+                  {requestForDetail.title}
+                </div>
+                <button className="close-btn" onClick={this.closeDetailsModal}>x</button>
+              </div>
 
+              <div className="content">
+                {requestForDetail.description}
+                <p>
+                  {requestForDetail.address}
+                </p>
+
+              </div>
+
+              <div className="footer">
+                <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                <button className="cancel-btn" onClick={this.closeDetailsModal}>Close</button>
+              </div>
+            </Modal>
+          }
           
         </div>
       </>

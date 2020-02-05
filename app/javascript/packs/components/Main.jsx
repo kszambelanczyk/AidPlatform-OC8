@@ -143,7 +143,7 @@ class Main extends React.Component {
                 geolocationFinished={geolocationFinished}
                 storeLastPos={this.storeLastPos} />
           </Route>
-          <Route exact path="/requests">
+          <Route path="/requests">
             <Requests />
           </Route>
           <Route exact path="/new_request">
@@ -158,7 +158,7 @@ class Main extends React.Component {
                     geolocated_lng={geolocated_lng}
                     handleNotification={this.handleNotification}/>
           </Route>
-          <Route exact path="/messages">
+          <Route path="/messages">
             Messages
           </Route>
 

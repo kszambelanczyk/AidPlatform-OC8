@@ -47,7 +47,7 @@ class RequestForm extends React.Component {
 
 
   onSubmit = (values, actions) => {
-    const isNew = values.id ? false : true;
+    // const isNew = values.id ? false : true;
     let url, method, message;
     if(values.id){
       url = `/api/requests/${values.id}`;
@@ -60,7 +60,7 @@ class RequestForm extends React.Component {
     }
     const { crf } = this.state;
     const { history, handleNotification } = this.props;
-    this.setState(() => ({isSubmitting: true, successfullySubmitted: false}),()=>{
+    this.setState(() => ({isSubmitting: true, successfullySubmitted: false}), ()=>{
       try {
         let params = { ...values };
         axios({
@@ -100,12 +100,12 @@ class RequestForm extends React.Component {
             }} >
             <Form>
               <div className="form-group">
-                <label htmlFor="title">Name</label>
+                <label htmlFor="title">Title (50 characters max)</label>
                 <Field name="title" type="text" className="form-control" />
                 <ErrorMessage name="title" component="div" className="text-danger"/>
               </div>
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">Description (300 characters max)</label>
                 <Field name="description" component="textarea" className="form-control" />
                 <ErrorMessage name="description" component="div" className="text-danger"/>
               </div>

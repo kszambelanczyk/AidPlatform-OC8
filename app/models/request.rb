@@ -27,4 +27,8 @@ class Request < ApplicationRecord
     self[:lnglat].x
   end
 
+  def is_my_request(user)
+    user.id==self.requester_id
+  end
+
 end

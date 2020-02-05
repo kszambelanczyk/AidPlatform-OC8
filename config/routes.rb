@@ -15,7 +15,18 @@ Rails.application.routes.draw do
   get 'main/*other', to: "main#index"
 
   namespace :api do
-    resources :requests
+    resources :requests do
+      member do 
+        post 'sign_to_volunteer'
+      end
+
+      member do 
+        post 'toggle_fulfilled'
+      end
+    end
+
+    get 'volunteering_requests', to: "requests#volunteering_requests"
+    
     get 'map_requests', to: "requests#map_requests"
 
     resource :user do
