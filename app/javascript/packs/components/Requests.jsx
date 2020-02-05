@@ -19,6 +19,7 @@ import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
 import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineClose from '@iconify/icons-ic/baseline-close';
 import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
 
 import RequestDetail from './RequestDetail';
 
@@ -149,7 +150,7 @@ class Requests extends React.Component {
         <div>Volunteered: { r.volunteer_count } </div>
         <div>
           <Tooltip overlay={r.published ? <span>Published</span> : <span>Unpublished</span>}>
-            <span><InlineIcon icon={ r.published ? baselineVisibility : baselineVisibilityOff } className="text-success"/></span>
+            <span><InlineIcon icon={ r.published ? baselineVisibility : baselineVisibilityOff } className={ r.published ? 'text-success' : '' }/></span>
           </Tooltip>
           <a onClick={() => {this.requestEditClicked(r)}}><InlineIcon icon={baselineEdit} /></a>
           <a onClick={() => {this.requestDeleteClicked(r)}} className="text-danger"><InlineIcon icon={baselineDeleteForever} /></a>
