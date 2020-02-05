@@ -59,7 +59,7 @@ class Api::RequestsController < ProtectedController
     @request.requester = current_user
 
     unless @request.save
-      format.json { render json: @request.errors, status: :unprocessable_entity }
+      render json: @request.errors, status: :unprocessable_entity
     end
 
     Pusher.trigger('map_status', 'reqest_count_change', {
@@ -76,7 +76,7 @@ class Api::RequestsController < ProtectedController
     end
 
     unless @request.update(request_params)
-      format.json { render json: @request.errors, status: :unprocessable_entity }
+      render json: @request.errors, status: :unprocessable_entity
       return
     end
 
@@ -144,7 +144,7 @@ class Api::RequestsController < ProtectedController
     end
     
     unless @request.save
-      format.json { render json: @request.errors, status: :unprocessable_entity }
+      render json: @request.errors, status: :unprocessable_entity
       return
     end
 
