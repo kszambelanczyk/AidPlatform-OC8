@@ -18,6 +18,7 @@ class Request < ApplicationRecord
   validates :address, presence: true
   validates_inclusion_of :request_type, in: [ REQUEST_TYPES[:one_time_task], REQUEST_TYPES[:material_need] ]
 
+  attr_accessor :volunteer_count
 
   def lat
     self[:lnglat].y
@@ -31,12 +32,23 @@ class Request < ApplicationRecord
     user.id==self.requester_id
   end
 
-  def shuold_be_unpublished
+  def should_be_unpublished
+    # if requester mark as fulfilled
     if(self.fulfilled)
       return true      
     end
-    # self.revolunteer_to_requests
+    
+    # if any volunteer mark as fulfilled
+    if(self.volunteer_to_requests.any?{|v| v.fulfilled })
+      return true      
+    end
 
+    # if there are 5 or more volunteers
+    if(self.volunteer_to_requests.length>4)
+      return true      
+    end
+
+    return false
   end
 
 end

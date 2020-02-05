@@ -15,6 +15,7 @@ import { Icon, InlineIcon } from '@iconify/react';
 import baselineDeleteForever from '@iconify/icons-ic/baseline-delete-forever';
 import baselineEdit from '@iconify/icons-ic/baseline-edit';
 import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
+import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
 import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineClose from '@iconify/icons-ic/baseline-close';
 import Tooltip from 'rc-tooltip';

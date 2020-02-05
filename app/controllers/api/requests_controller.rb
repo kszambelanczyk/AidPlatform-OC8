@@ -139,6 +139,10 @@ class Api::RequestsController < ProtectedController
 
     @request.fulfilled = !@request.fulfilled
 
+    if (@request.should_be_unpublished)
+      @request.published = false
+    end
+    
     unless @request.save
       format.json { render json: @request.errors, status: :unprocessable_entity }
       return
