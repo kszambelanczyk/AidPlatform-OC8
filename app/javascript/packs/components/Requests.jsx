@@ -20,7 +20,7 @@ import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineClose from '@iconify/icons-ic/baseline-close';
 import Tooltip from 'rc-tooltip';
 
-import 'rc-tooltip/assets/bootstrap_white.css';
+// import 'rc-tooltip/assets/bootstrap_white.css';
 
 import RequestDetail from './RequestDetail';
 
