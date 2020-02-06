@@ -86,7 +86,6 @@ class Requests extends React.Component {
         ]
       });
     });
-
   }
 
   deleteRequest = async (requestId) => {
