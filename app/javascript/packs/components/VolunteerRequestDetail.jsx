@@ -11,12 +11,11 @@ import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
 import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
 
 
-class RequestDetail extends React.Component {
+class VolunteerRequestDetail extends React.Component {
   state = {
     loading: false,
     isAsync: false,
     request: null,
-    volunteers: []
   };
 
   componentDidMount() {
@@ -31,11 +30,10 @@ class RequestDetail extends React.Component {
 
     this.setState(()=>({loading: true}));
     try {
-      axios.get(`/api/requests/${requestId}`)
+      axios.get(`/api/requests/${requestId}/volunteering_request`)
       .then(res => {
         this.setState(()=>({
           request: res.data.request,
-          volunteers: res.data.volunteers,
           loading: false
         }));
       }, ()=>{
@@ -47,15 +45,6 @@ class RequestDetail extends React.Component {
     }
   }
 
-  deleteClicked = (request) => {
-    this.setState(()=>({isAsync:true}), ()=>{
-      this.props.requestDeleteClicked(request).then(()=>{
-        this.setState(()=>({isAsync:false}));
-      },()=>{
-        this.setState(()=>({isAsync:false}));
-      });
-    });
-  }
 
   toggleFulfilled = (request) => {
     this.setState(()=>({isAsync:true}), ()=>{
@@ -70,55 +59,31 @@ class RequestDetail extends React.Component {
     });
   }
 
-  requestRepublishClicked = (request) => {
-    
+  unvolunteerClicked = (request) => {
     this.setState(()=>({isAsync:true}), ()=>{
-      this.props.requestRepublish(request.id).then((request)=>{ 
-        this.setState(()=>({
-          isAsync:false,
-          request: request
-        }));
+      this.props.requestUnvolunteerClicked(request).then(()=>{
+        this.setState(()=>({isAsync:false}));
       },()=>{
         this.setState(()=>({isAsync:false}));
       });
     });
   }
 
-  render() {
-    const { request, volunteers, loading, isAsync } = this.state;
-    const { requestEditClicked  } = this.props;
 
-    const volunteerRows = volunteers.map((v)=> 
-      <div key={ v.id } className="volunteers-list-row">
-        <div>
-          {v.avatar_50 && 
-            <img src={v.avatar_50} className="img-circle header-avatar-img"/>
-          }
-          {v.avatar_50==null && 
-            <Icon icon={userCircle} />
-          }
-        </div>
-        <div>{v.username}</div>
-        <div><Moment format="YYYY.MM.DD H:mm">{ v.volunteer_date }</Moment></div>
-        <div><Link to={`/messages/${v.id}`}>messages</Link></div>
-      </div>
-    );
+  render() {
+    const { request, loading, isAsync } = this.state;
 
     return (
       <>
-        <p><Link to={'/requests'}>&lt;- all requests</Link></p>
+        <p><Link to={'/volunteering'}>&lt;- all volunteering</Link></p>
         <div className="request-detail">
           { request && 
             <>
               <div className="request-menu">
-                { !request.published && 
-                  <a onClick={() => { this.requestRepublishClicked(request) }}>Republish</a>
-                }
-                <a onClick={() => { this.toggleFulfilled(request) }} className={ request.fulfilled ? 'text-success' : ''}>
-                  <InlineIcon icon={ request.fulfilled ? baselineCheck : baselineClose} /> Fulfilled
+                <a onClick={() => { this.toggleFulfilled(request) }} className={ request.volunteer_fulfilled ? 'text-success' : ''}>
+                  <InlineIcon icon={ request.volunteer_fulfilled ? baselineCheck : baselineClose} /> Fulfilled
                 </a>
-                <a onClick={() => { requestEditClicked(request) }}>Edit</a>
-                <a onClick={() => { this.deleteClicked(request) }} className="text-danger">Delete</a>
+                <a onClick={() => { this.unvolunteerClicked(request) }} className="text-danger">Unvolunteer</a>
               </div>
 
               <div className="row">
@@ -133,7 +98,17 @@ class RequestDetail extends React.Component {
                   <p>{ request.description }</p>
                 </div>
                 <div className="col-md-4">
-                  <p className="small-label">Fulfilled:</p>
+                  <p className="small-label">Fulfilled by you:</p>
+                  <p style={{fontSize: '1.1rem'}}>
+                    { !request.volunteer_fulfilled && 
+                      <InlineIcon icon={baselineClose} />
+                    }
+                    { request.volunteer_fulfilled && 
+                      <span className="text-success"><InlineIcon icon={baselineCheck} /></span>
+                    }
+                  </p>
+
+                  <p className="small-label">Fulfilled by requester:</p>
                   <p style={{fontSize: '1.1rem'}}>
                     { !request.fulfilled && 
                       <InlineIcon icon={baselineClose} />
@@ -159,15 +134,6 @@ class RequestDetail extends React.Component {
                 </div>
               </div>
 
-              <h5 className="pb-2">Volunteers:</h5>
-              <div className="row">
-                <div className="col-md-10 offset-md-1">
-                  <div className="volunteers-list">
-                    { volunteerRows }
-                    { volunteerRows.length==0 ? 'none' : ''}
-                  </div>
-                </div>
-              </div>
             </>
           }
 
@@ -182,4 +148,4 @@ class RequestDetail extends React.Component {
 }
 
 
-export default withRouter(RequestDetail);
+export default withRouter(VolunteerRequestDetail);

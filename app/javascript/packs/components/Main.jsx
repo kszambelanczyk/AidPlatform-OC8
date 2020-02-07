@@ -137,6 +137,7 @@ class Main extends React.Component {
         <Header avatarUrl={avatarImgThumb50}/>
         {notificationEl}
         <Switch location={location}>
+
           <Route exact path="/">
             <Map current_lat={current_lat} 
                 current_lng={current_lng} 
@@ -144,25 +145,28 @@ class Main extends React.Component {
                 geolocationFinished={geolocationFinished}
                 storeLastPos={this.storeLastPos} />
           </Route>
+
           <Route path="/requests">
             <Requests />
           </Route>
+
           <Route exact path="/new_request">
             <NewRequest geolocationFinished={geolocationFinished}
                     geolocated_lat={geolocated_lat}
                     geolocated_lng={geolocated_lng}
                     handleNotification={this.handleNotification}/>
           </Route>
+
           <Route exact path="/edit_request/:id">
             <EditRequest geolocationFinished={geolocationFinished}
                     geolocated_lat={geolocated_lat}
                     geolocated_lng={geolocated_lng}
                     handleNotification={this.handleNotification}/>
           </Route>
+
           <Route path="/volunteering">
             <Volunteering />
           </Route>
-
 
           <Route path="/messages">
             Messages
@@ -170,7 +174,6 @@ class Main extends React.Component {
 
           <Route exact path="/account">
             <Account handleNotification={this.handleNotification} avatarChanged={this.avatarChanged} avatarUrl={avatarImgThumb128} />
-
           </Route>
 
         </Switch>

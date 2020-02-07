@@ -153,17 +153,21 @@ body {
 
     .request-row {
         display: grid;
+        align-items: center;
         @media screen and (max-width: 768px) {
-            grid-template-columns: auto  70px;
+            grid-template-columns: 40px auto  70px;
         }
         @media screen and (min-width: 768px) {
-            grid-template-columns: 140px auto 120px 70px;
+            grid-template-columns: 125px 40px auto 120px 70px;
         }
         grid-column-gap: 1rem;
         padding: 2px 8px;
         
         div {
             font-size: 1.1rem;
+        }
+        div.date {
+            white-space: nowrap;
         }
         div:last-child {
             a {
@@ -172,7 +176,7 @@ body {
             justify-self: end;
         } 
 
-        div:nth-child(1), div:nth-child(3) {
+        div:nth-child(1), div:nth-child(4) {
             @media screen and (max-width: 768px) {
                 display: none;
             }
@@ -187,16 +191,38 @@ body {
     }
 }
 
-.volunteers-grid {
-    justify-content: center;
+.volunteers-request-grid {
     display: grid;
     grid-template-rows: auto;
     grid-row-gap: 0.2rem;
 
-    .volunteer-row {
+    .volunteer-request-row {
         display: grid;
-        grid-template-columns: auto 60px;
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 40px auto 50px 25px;
+        }
+        @media screen and (min-width: 768px) {
+            grid-template-columns: 125px 40px auto 50px 60px 25px;
+        }
         grid-column-gap: 1rem;
+        padding: 2px 8px;
+        align-items: center;
+
+        div:nth-child(1), div:nth-child(5) {
+            @media screen and (max-width: 768px) {
+                display: none;
+            }
+        }
+
+        a {
+            color: $color5;
+            text-decoration: underline;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+
     }
 }
 
@@ -233,6 +259,9 @@ body {
 }
 
 .request-detail {
+    a {
+        cursor: pointer;
+    }
     min-height: 400px;
     .async {
         position: absolute;

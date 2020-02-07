@@ -51,4 +51,43 @@ class Request < ApplicationRecord
     return false
   end
 
+  def can_be_republished
+    messages = []
+
+    # if it is published
+    if(self.published)
+      messages.push('Can not republish already published request')
+      return messages      
+    end
+
+    # if it is fulfilled by requester
+    if(self.fulfilled)
+      messages.push('Can not republish fulfilled request')
+      return messages      
+    end
+
+    # if it is fulfilled by volunteer
+    if(self.volunteer_to_requests.any? {|v| v.fulfilled })
+      messages.push('Can not republish request that is marked as fulfilled by volunteers')
+      return messages      
+    end
+
+    # if it has 5 or more volunteers and all of them did not mark it as fulfilled
+    # and the last volunteer time was not more than 24 hours ago 
+    if(self.volunteer_to_requests.count>4)
+      # find the last volunteer date
+      last_date = self.volunteer_to_requests.pluck(:created_at).inject do |memo, date|
+        memo > date ? memo : date
+      end
+      if(Time.now < (last_date + 1.day))
+        messages.push(`Can not republish becouse there are 5 or more volunteers for your request.
+          If no one will mark it as fulfilled till #{last_date + 1.day} than you can republish it`)
+       return messages      
+      end
+    end
+    
+    # every time can be republished
+    return true
+  end
+
 end

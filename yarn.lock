@@ -757,6 +757,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@iconify/icons-bx@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-bx/-/icons-bx-1.0.0.tgz#7c934b92d595b85625d6063bfb96bb6367a3326c"
+  integrity sha512-CF80gMFVmLyACk6LriX3Ni1z8l+pgc6VzgmE5dkeOHdwQV0qGVThBKh+VzPYszFPOimYMVmCGQU24gUga8/9zQ==
+
 "@iconify/icons-fa-solid@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@iconify/icons-fa-solid/-/icons-fa-solid-1.0.6.tgz#18d81621746aee46451afcbf4eebaaf750a17964"

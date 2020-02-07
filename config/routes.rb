@@ -18,11 +18,13 @@ Rails.application.routes.draw do
     resources :requests do
       member do 
         post 'sign_to_volunteer'
+        post 'unvolunteer'
+        post 'toggle_fulfilled'
+        post 'toggle_volunteer_fulfilled'
+        post 'republish'
+        get 'volunteering_request'
       end
 
-      member do 
-        post 'toggle_fulfilled'
-      end
     end
 
     get 'volunteering_requests', to: "requests#volunteering_requests"

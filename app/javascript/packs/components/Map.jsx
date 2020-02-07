@@ -150,17 +150,16 @@ class Map extends React.Component {
 
     axios.post(url, {}, config)
       .then(res => {
-        avatarChanged(res.data);
-        this.setState(()=>({
-          isFileSubmitting: false, 
-        }));
-        actions.setSubmitting(false);
+        // this.setState(()=>({
+        //   isFileSubmitting: false, 
+        // }));
+        // actions.setSubmitting(false);
         handleNotification('Succefully volunteered to request');
-        actions.resetForm();
+        // actions.resetForm();
       }, (error)=>{
-        actions.setSubmitting(false);
+        // actions.setSubmitting(false);
         handleNotification('Volunteer failed');
-        this.setState(()=>({isFileSubmitting: false}));
+        // this.setState(()=>({isFileSubmitting: false}));
         console.error(error);
       });
   }

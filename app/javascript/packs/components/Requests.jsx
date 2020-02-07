@@ -17,7 +17,8 @@ import baselineEdit from '@iconify/icons-ic/baseline-edit';
 import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
 import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
 import baselineCheck from '@iconify/icons-ic/baseline-check';
-import baselineClose from '@iconify/icons-ic/baseline-close';
+// import baselineClose from '@iconify/icons-ic/baseline-close';
+import bxUserCheck from '@iconify/icons-bx/bx-user-check';
 import Tooltip from 'rc-tooltip';
 
 // import 'rc-tooltip/assets/bootstrap_white.css';
@@ -65,7 +66,7 @@ class Requests extends React.Component {
     return new Promise((resolve, reject) => {
       confirmAlert({
         title: 'Please confirm deletion',
-        message: 'Are you sure to do this.',
+        message: 'Are you sure to do this?',
         buttons: [
           {
             label: 'Yes',
@@ -108,13 +109,6 @@ class Requests extends React.Component {
     } 
   }
 
-  // toggleShowFulfilled = () => {
-  //   const { showFulfilled } = this.state;
-  //   this.setState(()=>({showFulfilled: !showFulfilled}), () => {
-  //     this.loadRequests();
-  //   });
-  // }
-
   requestToggleFulfilled = async (requestId) => {
     const { crf, requests } = this.state;
     this.setState(()=>({loadingRequests: true}));
@@ -138,14 +132,39 @@ class Requests extends React.Component {
     return request;
   }
 
+  requestRepublish = async (requestId) => {
+    const { crf, requests } = this.state;
+    this.setState(()=>({loadingRequests: true}));
+    let request;
+    try {
+      const result = await axios.post(`/api/requests/${requestId}/republish`, {}, { headers: {'X-CSRF-Token': crf } })
+      request = result.data.request;
+      // updating previously loaded requests list
+      const index = requests.findIndex((r) => r.id==request.id);
+      if (index>-1){
+        requests[index] = request;
+        this.setState(()=>({requests: requests}));
+      }
+    } 
+    catch(error) {
+      console.error(error);
+    }
+    finally {
+      this.setState(()=>({loadingRequests: false}));
+    }
+    return request;
+  }
+
+
   render() {
     const { requests, loadingRequests } = this.state;
     
-    let { path, url } = this.props.match;
+    const { path, url } = this.props.match;
 
     const reqestRows = requests.map((r)=> 
       <div key={ r.id } className="request-row" style={ r.fulfilled ? { backgroundColor: 'lightgreen' } : {}}>
-        <div><Moment format="YYYY.MM.DD H:mm">{ r.created_at }</Moment></div>
+        <div className="date"><Moment format="YYYY.MM.DD H:mm">{ r.created_at }</Moment></div>
+        <div>{ r.volunteer_fulfilled && <InlineIcon icon={bxUserCheck}/>} { r.fulfilled && <InlineIcon icon={baselineCheck}/> }</div>
         <div><Link to={`${url}/${r.id}`}>{ r.title }</Link></div>
         <div>Volunteered: { r.volunteer_count } </div>
         <div>
@@ -169,20 +188,11 @@ class Requests extends React.Component {
               <Route exact path={path}>
                 <div className="requests-header">
                 <h4>My requests</h4>
-
-                  {/* { showFulfilled && 
-                    <button type="button" className="btn btn-sm btn-success" onClick={this.toggleShowFulfilled}> 
-                      <InlineIcon icon={baselineCheck} /> Fulfilled
-                    </button>
-                  }
-                  { !showFulfilled && 
-                    <button type="button" className="btn btn-sm btn-secondary" onClick={this.toggleShowFulfilled}>
-                      <InlineIcon icon={baselineClose} /> Fulfilled
-                    </button>
-                  } */}
                 </div>
                 <div className="requests-grid">
                   { reqestRows }
+                  { reqestRows.length==0 ? 'none' : ''}
+
                   { loadingRequests ? 'loading' : '' }
                 </div>
               </Route>
@@ -191,6 +201,7 @@ class Requests extends React.Component {
                 <RequestDetail requestEditClicked={this.requestEditClicked} 
                   requestDeleteClicked={this.requestDeleteClicked}
                   requestToggleFulfilled={this.requestToggleFulfilled}
+                  requestRepublish={this.requestRepublish}
                   /> 
               </Route>
 
