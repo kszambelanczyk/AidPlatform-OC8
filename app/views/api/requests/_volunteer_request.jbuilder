@@ -33,6 +33,7 @@ else
   json.volunteer_fulfilled request.volunteer_to_requests.find {|v| v.volunteer_id==current_user.id }.fulfilled
 end
 
+json.requester_id request.requester.id
 json.requester_username request.requester.username
 json.requester_avatar_25 request.requester.avatar_25
 json.requester_avatar_50 request.requester.avatar_50

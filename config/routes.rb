@@ -24,7 +24,13 @@ Rails.application.routes.draw do
         post 'republish'
         get 'volunteering_request'
       end
+    end
 
+    resources :messages do
+      collection do
+        get 'get_recipients'
+        get 'user/:id' , to: 'messages#user'
+      end
     end
 
     get 'volunteering_requests', to: "requests#volunteering_requests"

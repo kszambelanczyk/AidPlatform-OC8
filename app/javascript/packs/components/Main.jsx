@@ -6,13 +6,6 @@ import {
 } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-// import axios from 'axios';
-// import SimpleBar from 'simplebar-react';
-// import { Icon } from '@iconify/react';
-// import userIcon from '@iconify/icons-el/user';
-// import mapMarker from '@iconify/icons-mdi/map-marker';
-
-
 import Header from './Header';
 import Map from './Map';
 import Requests from './Requests';
@@ -20,6 +13,7 @@ import Volunteering from './Volunteering';
 import NewRequest from './NewRequest';
 import EditRequest from './EditRequest';
 import Account from './Account';
+import Messages from './Messages';
 
 
 class Main extends React.Component {
@@ -143,11 +137,12 @@ class Main extends React.Component {
                 current_lng={current_lng} 
                 current_zoom={current_zoom} 
                 geolocationFinished={geolocationFinished}
-                storeLastPos={this.storeLastPos} />
+                storeLastPos={this.storeLastPos}c
+                handleNotification={this.handleNotification} />
           </Route>
 
           <Route path="/requests">
-            <Requests />
+            <Requests handleNotification={this.handleNotification}/>
           </Route>
 
           <Route exact path="/new_request">
@@ -165,11 +160,11 @@ class Main extends React.Component {
           </Route>
 
           <Route path="/volunteering">
-            <Volunteering />
+            <Volunteering handleNotification={this.handleNotification}/>
           </Route>
 
           <Route path="/messages">
-            Messages
+            <Messages handleNotification={this.handleNotification}/>
           </Route>
 
           <Route exact path="/account">

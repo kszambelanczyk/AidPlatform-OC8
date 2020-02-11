@@ -32,6 +32,17 @@ class Request < ApplicationRecord
     user.id==self.requester_id
   end
 
+  def update_published_state
+    # if request is not published do nothing
+    unless self.published
+      return
+    end
+    
+    if self.should_be_unpublished
+      self.published = false
+    end
+  end
+
   def should_be_unpublished
     # if requester mark as fulfilled
     if(self.fulfilled)

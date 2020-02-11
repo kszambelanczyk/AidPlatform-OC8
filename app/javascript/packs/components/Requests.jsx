@@ -91,7 +91,7 @@ class Requests extends React.Component {
 
   deleteRequest = async (requestId) => {
     const { crf } = this.state;
-    const { history } = this.props;
+    const { history, handleNotification } = this.props;
     this.setState(()=>({loadingRequests: true}));
     try {
       await axios.delete(`/api/requests/${requestId}`, { headers: {'X-CSRF-Token': crf } })
@@ -100,6 +100,7 @@ class Requests extends React.Component {
           this.loadRequests();
           // deletion could be invoked from request detail page
           history.push('/requests');
+          handleNotification("Successfully deleted the request");
         }, ()=>{
           this.setState(()=>({loadingRequests: false}));
         });
@@ -111,15 +112,21 @@ class Requests extends React.Component {
 
   requestToggleFulfilled = async (requestId) => {
     const { crf, requests } = this.state;
+    const { handleNotification } = this.props;
     this.setState(()=>({loadingRequests: true}));
-    let request;
+    let data;
     try {
       const result = await axios.post(`/api/requests/${requestId}/toggle_fulfilled`, {}, { headers: {'X-CSRF-Token': crf } })
-      request = result.data.request;
+      data = result.data;
+      if(data.request.fulfilled){
+        handleNotification("Successfully fulfilled the request");
+      } else {
+        handleNotification("Successfully marked the request as unfulfilled");
+      }
       // updating previously loaded requests list
-      const index = requests.findIndex((r) => r.id==request.id);
+      const index = requests.findIndex((r) => r.id==data.request.id);
       if (index>-1){
-        requests[index] = request;
+        requests[index] = data.request;
         this.setState(()=>({requests: requests}));
       }
     } 
@@ -129,20 +136,26 @@ class Requests extends React.Component {
     finally {
       this.setState(()=>({loadingRequests: false}));
     }
-    return request;
+    return data;
   }
 
   requestRepublish = async (requestId) => {
     const { crf, requests } = this.state;
+    const { handleNotification } = this.props;
+
     this.setState(()=>({loadingRequests: true}));
-    let request;
+    let data;
     try {
       const result = await axios.post(`/api/requests/${requestId}/republish`, {}, { headers: {'X-CSRF-Token': crf } })
-      request = result.data.request;
+      data = result.data;
+      if(data.request.published){
+        handleNotification("Successfully published the request");
+      }
+
       // updating previously loaded requests list
-      const index = requests.findIndex((r) => r.id==request.id);
+      const index = requests.findIndex((r) => r.id==data.request.id);
       if (index>-1){
-        requests[index] = request;
+        requests[index] = data.request;
         this.setState(()=>({requests: requests}));
       }
     } 
@@ -152,7 +165,7 @@ class Requests extends React.Component {
     finally {
       this.setState(()=>({loadingRequests: false}));
     }
-    return request;
+    return data;
   }
 
 

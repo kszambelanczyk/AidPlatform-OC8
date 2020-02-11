@@ -15,7 +15,7 @@ import { Icon, InlineIcon } from '@iconify/react';
 import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineMessage from '@iconify/icons-ic/baseline-message';
 import bxUserCheck from '@iconify/icons-bx/bx-user-check';
-
+import userCircle from '@iconify/icons-fa-solid/user-circle';
 
 import VolunteerRequestDetail from './VolunteerRequestDetail';
 
@@ -78,7 +78,7 @@ class Volunteering extends React.Component {
 
   unvolunteerRequest = async (requestId) => {
     const { crf } = this.state;
-    const { history } = this.props;
+    const { history, handleNotification } = this.props;
     this.setState(()=>({loadingVolunteers: true}));
     try {
       await axios.post(`/api/requests/${requestId}/unvolunteer`,{} , { headers: {'X-CSRF-Token': crf } })
@@ -87,6 +87,7 @@ class Volunteering extends React.Component {
           this.loadVolunteers();
           // unvolunteering could be invoked from request detail page
           history.push('/volunteering');
+          handleNotification("Successfully unvolunteer from request");
         }, ()=>{
           this.setState(()=>({loadingVolunteers: false}));
         });
@@ -99,11 +100,18 @@ class Volunteering extends React.Component {
 
   requestToggleFulfilled = async (requestId) => {
     const { crf, volunteers } = this.state;
+    const { handleNotification } = this.props;
+
     this.setState(()=>({loadingVolunteers: true}));
     let request;
     try {
       const result = await axios.post(`/api/requests/${requestId}/toggle_volunteer_fulfilled`, {}, { headers: {'X-CSRF-Token': crf } })
       request = result.data.request;
+      if(request.fulfilled){
+        handleNotification("Successfully fulfilled request");
+      } else {
+        handleNotification("Successfully marked request as unfulfilled");
+      }
       // updating previously loaded requests list
       const index = volunteers.findIndex((r) => r.id==request.id);
       if (index>-1){
@@ -122,9 +130,7 @@ class Volunteering extends React.Component {
 
   render() {
     const { volunteers, loadingVolunteers } = this.state;
-    
     const { path, url } = this.props.match;
-
     
     const volunteersRows = volunteers.map((r)=> 
     <div key={ r.id } className="volunteer-request-row" style={ r.fulfilled ? { backgroundColor: 'lightgreen' } : {}}>
@@ -141,7 +147,7 @@ class Volunteering extends React.Component {
       </div>
       <div>{ r.requester_username }</div>
       <div>
-        <Link to={`/messages/1`}>
+        <Link to={`/messages/${r.id}`}>
           <Icon icon={baselineMessage} />
         </Link>
       </div>

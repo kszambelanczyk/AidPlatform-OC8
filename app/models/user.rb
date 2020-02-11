@@ -5,6 +5,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :requests, foreign_key: "requester_id", dependent: :destroy
+  
+  has_many :sent_messages, foreign_key: "sender_id", class_name: "Message", dependent: :destroy
+  has_many :received_messages, foreign_key: "recipient_id", class_name: "Message", dependent: :destroy
 
   has_many :volunteer_to_requests, foreign_key: "volunteer_id", dependent: :destroy
   has_many :volunteer_requests, through: :volunteer_to_requests, class_name: 'Request', source: :request
@@ -23,4 +26,6 @@ class User < ApplicationRecord
   def avatar_50
     self.avatar.thumb_50.url
   end
+
+  attr_accessor :unreaded_messages
 end

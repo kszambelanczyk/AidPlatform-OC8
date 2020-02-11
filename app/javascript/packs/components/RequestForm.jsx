@@ -52,11 +52,11 @@ class RequestForm extends React.Component {
     if(values.id){
       url = `/api/requests/${values.id}`;
       method = 'put';
-      message = "Request succefully updated";
+      message = "Request successfully updated";
     } else {
       url = `/api/requests`;
       method = 'post';
-      message = "Request succefully created";
+      message = "Request successfully created";
     }
     const { crf } = this.state;
     const { history, handleNotification } = this.props;
@@ -74,8 +74,8 @@ class RequestForm extends React.Component {
         .then(res => {
           this.setState(()=>({isSubmitting: false, successfullySubmitted: true}));
           actions.setSubmitting(false);
-          handleNotification('Request succefully saved');
           history.push('/requests');
+          handleNotification(message);
         });
       } 
       catch(error) {
@@ -85,6 +85,8 @@ class RequestForm extends React.Component {
   }
 
   render() {
+    console.log('rerender');
+
     const { isSubmitting } = this.state;
     const { request, geolocationFinished } = this.props;
 

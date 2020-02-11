@@ -1,0 +1,9 @@
+json.(message,
+  :id,
+  :message,
+  :created_at,
+  :readed,
+  :read_date,
+  :recipient_id,
+  :sender_id,
+  )

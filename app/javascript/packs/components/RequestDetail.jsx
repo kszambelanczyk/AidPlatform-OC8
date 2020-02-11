@@ -9,6 +9,8 @@ import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineClose from '@iconify/icons-ic/baseline-close';
 import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
 import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
+import baselineMessage from '@iconify/icons-ic/baseline-message';
+import Tooltip from 'rc-tooltip';
 
 
 class RequestDetail extends React.Component {
@@ -16,13 +18,11 @@ class RequestDetail extends React.Component {
     loading: false,
     isAsync: false,
     request: null,
-    volunteers: []
+    volunteers: [],
+    can_be_republished: false
   };
 
   componentDidMount() {
-    // const crf =  document.getElementsByName("csrf-token")[0].getAttribute("content");
-    // this.setState(()=>({crf: crf}));
-
     this.loadRequest();
   }
 
@@ -36,6 +36,7 @@ class RequestDetail extends React.Component {
         this.setState(()=>({
           request: res.data.request,
           volunteers: res.data.volunteers,
+          can_be_republished: res.data.can_be_republished,
           loading: false
         }));
       }, ()=>{
@@ -59,10 +60,11 @@ class RequestDetail extends React.Component {
 
   toggleFulfilled = (request) => {
     this.setState(()=>({isAsync:true}), ()=>{
-      this.props.requestToggleFulfilled(request.id).then((request)=>{ 
+      this.props.requestToggleFulfilled(request.id).then((data)=>{ 
         this.setState(()=>({
           isAsync:false,
-          request: request
+          request: data.request,
+          can_be_republished: data.can_be_republished,
         }));
       },()=>{
         this.setState(()=>({isAsync:false}));
@@ -71,12 +73,12 @@ class RequestDetail extends React.Component {
   }
 
   requestRepublishClicked = (request) => {
-    
     this.setState(()=>({isAsync:true}), ()=>{
-      this.props.requestRepublish(request.id).then((request)=>{ 
+      this.props.requestRepublish(request.id).then((data)=>{ 
         this.setState(()=>({
           isAsync:false,
-          request: request
+          request: data.request,
+          can_be_republished: data.can_be_republished,
         }));
       },()=>{
         this.setState(()=>({isAsync:false}));
@@ -85,11 +87,14 @@ class RequestDetail extends React.Component {
   }
 
   render() {
-    const { request, volunteers, loading, isAsync } = this.state;
+    const { request, volunteers, loading, isAsync, can_be_republished } = this.state;
     const { requestEditClicked  } = this.props;
+
+    const republishError = can_be_republished===true ? false : can_be_republished[0];
 
     const volunteerRows = volunteers.map((v)=> 
       <div key={ v.id } className="volunteers-list-row">
+        <div><Moment format="YYYY.MM.DD H:mm">{ v.volunteer_date }</Moment></div>
         <div>
           {v.avatar_50 && 
             <img src={v.avatar_50} className="img-circle header-avatar-img"/>
@@ -99,8 +104,11 @@ class RequestDetail extends React.Component {
           }
         </div>
         <div>{v.username}</div>
-        <div><Moment format="YYYY.MM.DD H:mm">{ v.volunteer_date }</Moment></div>
-        <div><Link to={`/messages/${v.id}`}>messages</Link></div>
+        <div>
+          <Link to={`/messages/1`}>
+            <Icon icon={baselineMessage} />
+          </Link>
+        </div>
       </div>
     );
 
@@ -112,7 +120,18 @@ class RequestDetail extends React.Component {
             <>
               <div className="request-menu">
                 { !request.published && 
-                  <a onClick={() => { this.requestRepublishClicked(request) }}>Republish</a>
+                  <>
+                  { can_be_republished===true &&
+                    <a onClick={() => { this.requestRepublishClicked(request) }}>Republish</a>
+                  }
+                  { republishError &&
+                    <Tooltip overlay={<span>{republishError}</span>}>
+                      <span className="disabled-link">
+                          Republish
+                      </span>
+                    </Tooltip>
+                  }
+                  </>
                 }
                 <a onClick={() => { this.toggleFulfilled(request) }} className={ request.fulfilled ? 'text-success' : ''}>
                   <InlineIcon icon={ request.fulfilled ? baselineCheck : baselineClose} /> Fulfilled
@@ -161,7 +180,7 @@ class RequestDetail extends React.Component {
 
               <h5 className="pb-2">Volunteers:</h5>
               <div className="row">
-                <div className="col-md-10 offset-md-1">
+                <div className="col-md-6 offset-md-3">
                   <div className="volunteers-list">
                     { volunteerRows }
                     { volunteerRows.length==0 ? 'none' : ''}

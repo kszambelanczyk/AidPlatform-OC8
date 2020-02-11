@@ -7,11 +7,6 @@ class Api::RequestsController < ProtectedController
       return
     end
 
-    # sql = "SELECT * FROM requests WHERE
-    #   fulfilled IS FALSE AND
-    #   requests.lnglat && ST_MakeEnvelope(#{params[:lng_h]}, #{params[:lat_l]}, #{params[:lng_l]}, #{params[:lat_h]}, 4326)"
-    # @requests = Request.find_by_sql(sql)
-
     @requests = Request.select("requests.*, COUNT(c1.id) as volunteer_count, COUNT(c2.id) as volunteered")
       .joins("LEFT JOIN volunteer_to_requests as c1 ON c1.request_id = requests.id")
       .joins("LEFT JOIN volunteer_to_requests as c2 ON c2.request_id = requests.id AND c2.volunteer_id=#{current_user.id}")
@@ -24,10 +19,12 @@ class Api::RequestsController < ProtectedController
     
   end
 
+
   def show
     @request = Request.find(params[:id])
     if(@request.requester_id!=current_user.id)
-      raise ActionController::Forbidden
+      head :forbidden
+      return
     end
 
     @volunteers = User.select("users.*, c1.created_at as volunteer_date")
@@ -38,12 +35,8 @@ class Api::RequestsController < ProtectedController
     @can_be_republished = @request.can_be_republished
   end
 
-  def index
-    # fulfilled = false
-    # if(params.has_key?(:fulfilled) && params[:fulfilled]=="true")
-    #   fulfilled = true
-    # end
 
+  def index
     @requests = Request.select("requests.*, COUNT(c1.id) as volunteer_count, BOOL_OR(c2.fulfilled) as volunteer_fulfilled")
       .joins("LEFT JOIN volunteer_to_requests as c1 ON c1.request_id = requests.id")
       .joins("LEFT JOIN volunteer_to_requests as c2 ON c2.request_id = requests.id")
@@ -51,10 +44,9 @@ class Api::RequestsController < ProtectedController
       .group("requests.id")
       .order("requests.created_at DESC")
     
-    # byebug
     @requests_count = Request.where('requester_id=?', current_user.id).count
-
   end
+
 
   def create
     @request = Request.new(request_params)
@@ -71,10 +63,12 @@ class Api::RequestsController < ProtectedController
     render :show
   end
 
+
   def update
     @request = Request.find(params[:id])
     if(@request.requester_id!=current_user.id)
-      raise ActionController::Forbidden
+      head :forbidden
+      return
     end
 
     unless @request.update(request_params)
@@ -90,7 +84,8 @@ class Api::RequestsController < ProtectedController
     request = Request.find(params[:id])
 
     if(request.requester_id!=current_user.id)
-      raise ActionController::Forbidden
+      head :forbidden
+      return
     end
 
     unless request.destroy
@@ -101,29 +96,27 @@ class Api::RequestsController < ProtectedController
     Pusher.trigger('map_status', 'reqest_count_change', {
       message: Request.not_fulfilled.count
     })
-
   end
 
-  def volunteering_requests
 
+  def volunteering_requests
     @requests = Request.includes(:requester).select("requests.*, c1.created_at as volunteer_date, c1.fulfilled as volunteer_fulfilled")
       .joins("LEFT JOIN volunteer_to_requests as c1 ON c1.request_id = requests.id")
       .where("c1.volunteer_id=?", current_user.id)
       .order("c1.created_at DESC")
 
     @requests_count = current_user.volunteer_requests.count
-
   end
+
 
   def volunteering_request
     @request = Request.find(params[:id])
 
-    # did I volunteer?
+    # did I volunteer to that request?
     if (@request.volunteer_to_requests.none? {|v| v.volunteer_id==current_user.id})
-      raise ActionController::Forbidden
+      head :forbidden
+      return
     end
-
-
   end
 
 
@@ -141,6 +134,11 @@ class Api::RequestsController < ProtectedController
     end
 
     current_user.volunteer_requests << @request
+
+    # there could be to many volunteers 
+    @request.update_published_state()
+    @request.save
+
   end
 
   def unvolunteer
@@ -166,7 +164,8 @@ class Api::RequestsController < ProtectedController
     @request = Request.find(params[:id])
 
     if(@request.requester_id!=current_user.id)
-      raise ActionController::Forbidden
+      head :forbidden
+      return
     end
 
     @request.fulfilled = !@request.fulfilled
@@ -182,6 +181,42 @@ class Api::RequestsController < ProtectedController
 
     render :show
   end
+
+
+  def republish
+    @request = Request.find(params[:id])
+
+    if(@request.requester_id!=current_user.id)
+      head :forbidden
+      return
+    end
+
+    result = @request.can_be_republished
+    unless result==true
+      # render json: result, status: :unprocessable_entity
+      render :show
+      return
+    end
+
+    @request.published = true
+    
+    begin
+      Request.transaction do
+        # update published flag
+        result = @request.save
+
+        # remove all volunteers
+        result = result && VolunteerToRequest.where('request_id=?', @request.id).destroy_all
+        raise "Transaction Failed" unless result
+      end
+    rescue => e
+      render json: {errors:e}, status: :unprocessable_entity
+      return
+    end
+
+    render :show
+  end
+
 
   def toggle_volunteer_fulfilled
     @request = Request.find(params[:id])
@@ -199,8 +234,15 @@ class Api::RequestsController < ProtectedController
 
     volunteer_to_request.fulfilled = !volunteer_to_request.fulfilled
 
-    unless volunteer_to_request.save
-      render json: volunteer_to_request.errors, status: :unprocessable_entity
+    begin
+      VolunteerToRequest.transaction do
+        result = volunteer_to_request.save
+        @request.update_published_state()
+        result = result && @request.save
+        raise "Transaction Failed" unless result
+      end
+    rescue => e
+      render json: {errors:e}, status: :unprocessable_entity
       return
     end
 
