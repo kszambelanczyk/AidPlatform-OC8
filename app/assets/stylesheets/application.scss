@@ -332,7 +332,7 @@ body {
     .sender-place {
         text-align: right;
         &>div {
-            display: inline;
+            display: inline-block;
             background-color: $color4;
             color: $color1;
             border-radius: 10px;
@@ -343,19 +343,21 @@ body {
 
     .recipient-place {
         &>div {
-            display: inline;
+            display: inline-block;
             background-color: white;
             color: $color5;
             border-radius: 10px;
             padding:5px 10px;
             div {
                 display: inline;
+                margin-right: 10px;
             }
         }
     }
 }
 
 .recipient-list {
+    overflow: hidden;
     .recipient-row {
         margin-bottom: 1rem;
         a {
@@ -366,6 +368,52 @@ body {
         }
         a.unreaded {
             font-weight: 600;
+        }
+    }
+}
+
+.detail-avatar-img {
+    height: 50px;
+}
+
+#messages {
+    .left-column {
+        border-right: 1px solid $color2;
+    }
+    .recipient-detail {
+        border-bottom: 1px solid $color2;
+        margin-bottom: 1rem;
+        :first-child {
+            margin-right: 1rem;
+        }
+        // padding: 1rem;
+    }
+}
+
+a.tooltip-link {
+    color: $color5;
+    cursor: pointer;
+    text-decoration: underline;
+    &:hover {
+        text-decoration: underline;
+    }   
+}
+
+section#map {
+    position: absolute;
+    top: 61px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    >div {
+        position: relative;
+        height: 100%;
+        #google-map {
+            width: 100%;
+            position: absolute;
+            top: 25px;
+            bottom: 0px;
+            overflow: hidden;
         }
     }
 }

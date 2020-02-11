@@ -3,7 +3,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-// import SimpleBar from 'simplebar-react';
+import SimpleBar from 'simplebar-react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -33,6 +33,7 @@ class DetailMessage extends React.Component {
     messageValid: false,
     currentUserId: preloadedData.current_user_id,
     crf: '',
+    currentRecipient: null,
   };
 
   componentDidMount() {
@@ -52,20 +53,32 @@ class DetailMessage extends React.Component {
     });
 
     this.preloadMessages();
+    this.getCurrentRecipient();
+
   }
 
   componentDidUpdate(prevProps) {
     const { recipientId } = this.props.match.params;
     if (recipientId !== prevProps.match.params.recipientId) {
       this.preloadMessages();
+      this.getCurrentRecipient();
     }
+  }
+
+  getCurrentRecipient(){
+    const { recipients } = this.props;
+    const { recipientId } = this.props.match.params;
+    const currentRecipient = recipients.find((r)=>{
+      return r.id==recipientId
+    });
+    this.setState(()=>({ currentRecipient: currentRecipient }));
   }
 
   preloadMessages = () => {
     const { messagesReaded } = this.props;
     const { recipientId } = this.props.match.params;
     this.loadMessages().then((messages)=>{
-      this.setState(()=>({messages: [...messages]}));
+      this.setState(()=>({messages: [...messages]}), () => { this.scrollDown() });
       messagesReaded(recipientId);
     });
   }
@@ -79,7 +92,7 @@ class DetailMessage extends React.Component {
     if(recipientId==messageSenderId){
       const lastId = messages.length>0 ? messages[messages.length-1].id : null;
       this.loadMessages(lastId).then((newMessages)=>{
-        this.setState(()=>({ messages: [...messages, ...newMessages] }));
+        this.setState(()=>({ messages: [...messages, ...newMessages] }), () => { this.scrollDown() });
       });
     } else {
       // send information of unread message
@@ -140,7 +153,7 @@ class DetailMessage extends React.Component {
       this.setState(()=>({
         messages: [...messages, ...result.data.messages],
         currentMessage: ''
-      }))
+      }), () => { this.scrollDown() })
     } 
     catch(error) {
       console.error(error);
@@ -151,10 +164,14 @@ class DetailMessage extends React.Component {
     return data;
   }
 
+  scrollDown = () => {
+    const el = document.getElementsByClassName("simplebar-content-wrapper")[0];
+    el.scrollTop = el.scrollHeight;
+  }
 
   render() {
-    const { messages, loading, pushing, currentMessage, messageValid, currentUserId } = this.state;
-    const { path, url } = this.props.match;
+    const { messages, loading, pushing, currentMessage, messageValid, currentUserId, currentRecipient } = this.state;
+    // const { path, url } = this.props.match;
 
     const messagesRows = messages.map((r)=> 
       <div key={ r.id } className="message-row">
@@ -169,10 +186,10 @@ class DetailMessage extends React.Component {
           <div className="recipient-place">
             <div>
               <div>
-                {r.requester_avatar_50 && 
-                  <img src={r.requester_avatar_50} className="img-circle header-avatar-img"/>
+                { currentRecipient.avatar_50 && 
+                  <img src={currentRecipient.avatar_50} className="img-circle header-avatar-img"/>
                 }
-                {r.requester_avatar_50==null && 
+                { currentRecipient.avatar_50==null && 
                   <Icon icon={userCircle} />
                 }
               </div>
@@ -187,21 +204,34 @@ class DetailMessage extends React.Component {
     );
 
     return (
-      <section id="requests">
-        <div className="container">
-
-              <div className="recipient-list">
-                {messagesRows}
-              </div>
-
-              <div className="input-place pt-3">
-                <textarea value={currentMessage} onChange={this.handleMessageChange} disabled={pushing} />
-                <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing}>Sent</button>
-              </div>
-
-
+      <div>
+        <div className="recipient-detail">
+          { currentRecipient &&
+            <>
+              <h4>
+                { currentRecipient.avatar_50 && 
+                  <img src={currentRecipient.avatar_50} className="img-circle detail-avatar-img"/>
+                }
+                { currentRecipient.avatar_50==null && 
+                  <Icon icon={userCircle} />
+                }
+                { currentRecipient.username }
+              </h4>
+            </>
+          }
         </div>
-      </section>
+
+        <div className="recipient-list">
+          <SimpleBar style={{ maxHeight: 500, minHeight: 500 }} >
+            {messagesRows}
+          </SimpleBar>
+        </div>
+
+        <div className="input-place pt-3">
+          <textarea value={currentMessage} onChange={this.handleMessageChange} disabled={pushing} />
+          <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing}>Sent</button>
+        </div>
+      </div>
     );
   }
 }

@@ -105,10 +105,10 @@ class Messages extends React.Component {
     );
 
     return (
-      <section id="requests">
-        <div className="container pt-5">
+      <section id="messages">
+        <div className="container-md pt-5">
           <div className="row">
-            <div className="col-md-2 offset-md-1 col-2">
+            <div className="col-md-2 offset-md-1 col-2 left-column">
               <div className="recipient-list">
                 {recipientsRows}
               </div>
@@ -119,7 +119,7 @@ class Messages extends React.Component {
                 <Switch>
                   <Route path={`${path}/:recipientId`}>
                     <DetailMessage newUnreadMessage={this.newUnreadMessage} 
-                                  messagesReaded={this.messagesReaded} />
+                                  messagesReaded={this.messagesReaded} recipients={recipients}/>
                   </Route>
                 </Switch>
               }

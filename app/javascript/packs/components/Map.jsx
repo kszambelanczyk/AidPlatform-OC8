@@ -3,6 +3,11 @@ import { withRouter } from 'react-router';
 import axios from 'axios';
 import Pusher from 'pusher-js';
 
+import {
+  BrowserRouter as Router,
+  Link,
+} from "react-router-dom";
+
 // import SimpleBar from 'simplebar-react';
 // import { Icon } from '@iconify/react';
 // import userIcon from '@iconify/icons-el/user';
@@ -150,16 +155,12 @@ class Map extends React.Component {
 
     axios.post(url, {}, config)
       .then(res => {
-        // this.setState(()=>({
-        //   isFileSubmitting: false, 
-        // }));
-        // actions.setSubmitting(false);
         handleNotification('Succefully volunteered to request');
-        // actions.resetForm();
+        const { history } = this.props;
+        history.push(`/volunteering/${request.id}`);
+    
       }, (error)=>{
-        // actions.setSubmitting(false);
         handleNotification('Volunteer failed');
-        // this.setState(()=>({isFileSubmitting: false}));
         console.error(error);
       });
   }
@@ -179,13 +180,12 @@ class Map extends React.Component {
       }
       return (
         <Marker key={r.id} 
-        position={{ lat: r.lat, lng: r.lng }} 
-        onClick={()=>{ this.markerClicked(r) }}
-        icon={{  
-          url: url, 
-          scaledSize: new google.maps.Size(size, size),
-          }}
-        />
+          position={{ lat: r.lat, lng: r.lng }} 
+          onClick={()=>{ this.markerClicked(r) }}
+          icon={{  
+            url: url, 
+            scaledSize: new google.maps.Size(size, size),
+            }} />
       );
     });
 
@@ -198,8 +198,9 @@ class Map extends React.Component {
     }
 
     return (
-      <>
+      <section id="map">
         <div>
+          
           <div className="map-menu">
             Map menu
             Unfulfilled requests: {requestsTotal}
@@ -207,22 +208,18 @@ class Map extends React.Component {
           <LoadScript id="script-loader"
             googleMapsApiKey={ process.env.MAP_API }>
 
-            <GoogleMap id='example-map'
-              mapContainerStyle={{
-                height: "600px",
-                width: "100%"
-              }}
+            <GoogleMap id='google-map'
               onLoad={ (m) => {this.mapLoaded(m)} }
               onIdle={ () => {this.onMapIdle()} }
             >
 
             {markerList}
 
-            { (infoWindowOpen && requestSelected) &&
+            { infoWindowOpen && requestSelected &&
               <InfoWindow onCloseClick={this.handleInfoWindowClose} position={{ lat: requestSelected.lat, lng: requestSelected.lng }}>
                 <>
                   <div>{requestSelected.title}</div>
-                  <a onClick={ () => { this.handleRequestDetail(requestSelected) } }>details</a>
+                  <a onClick={ () => { this.handleRequestDetail(requestSelected) } } className="tooltip-link">more</a>
                 </>
               </InfoWindow>
             }
@@ -253,14 +250,25 @@ class Map extends React.Component {
               </div>
 
               <div className="footer">
-                <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                { requestForDetail.is_my_request &&
+                  <Link to={`/requests/${requestForDetail.id}`} className="btn btn-primary">Details</Link>
+                  // <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                }
+                { !requestForDetail.is_my_request && !requestForDetail.volunteered && 
+                  <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                }
+                { !requestForDetail.is_my_request && requestForDetail.volunteered && 
+                  <Link to={`/volunteering/${requestForDetail.id}`} className="btn btn-primary">Details</Link>
+                  // <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                }
+                
                 <button className="cancel-btn" onClick={this.closeDetailsModal}>Close</button>
               </div>
             </Modal>
           }
-          
         </div>
-      </>
+        
+      </section>
     );
   }
 }

@@ -142,29 +142,29 @@ class Main extends React.Component {
           </Route>
 
           <Route path="/requests">
-            <Requests handleNotification={this.handleNotification}/>
+            <Requests handleNotification={this.handleNotification} />
           </Route>
 
           <Route exact path="/new_request">
             <NewRequest geolocationFinished={geolocationFinished}
                     geolocated_lat={geolocated_lat}
                     geolocated_lng={geolocated_lng}
-                    handleNotification={this.handleNotification}/>
+                    handleNotification={this.handleNotification} />
           </Route>
 
           <Route exact path="/edit_request/:id">
             <EditRequest geolocationFinished={geolocationFinished}
                     geolocated_lat={geolocated_lat}
                     geolocated_lng={geolocated_lng}
-                    handleNotification={this.handleNotification}/>
+                    handleNotification={this.handleNotification} />
           </Route>
 
           <Route path="/volunteering">
-            <Volunteering handleNotification={this.handleNotification}/>
+            <Volunteering handleNotification={this.handleNotification} />
           </Route>
 
           <Route path="/messages">
-            <Messages handleNotification={this.handleNotification}/>
+            <Messages handleNotification={this.handleNotification} />
           </Route>
 
           <Route exact path="/account">
