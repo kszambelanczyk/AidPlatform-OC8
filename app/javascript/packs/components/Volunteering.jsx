@@ -147,7 +147,7 @@ class Volunteering extends React.Component {
       </div>
       <div>{ r.requester_username }</div>
       <div>
-        <Link to={`/messages/${r.id}`}>
+        <Link to={`/messages/${r.requester_id}`}>
           <Icon icon={baselineMessage} />
         </Link>
       </div>

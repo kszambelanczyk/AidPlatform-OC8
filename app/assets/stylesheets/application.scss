@@ -354,3 +354,18 @@ body {
         }
     }
 }
+
+.recipient-list {
+    .recipient-row {
+        margin-bottom: 1rem;
+        a {
+            color: $color5;
+            :first-child {
+                margin-right: 10px;
+            }
+        }
+        a.unreaded {
+            font-weight: 600;
+        }
+    }
+}

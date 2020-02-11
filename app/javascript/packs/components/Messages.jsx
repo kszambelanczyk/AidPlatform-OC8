@@ -43,7 +43,7 @@ class Messages extends React.Component {
   }
 
   componentDidUpdate(){
-    // if exact path redirect to most recent conversation
+    // if exact path -> redirect to most recent conversation
     const { isExact } = this.props.match;
     const { history } = this.props;
     const { recipients } = this.state;
@@ -66,7 +66,23 @@ class Messages extends React.Component {
   }
 
   newUnreadMessage = (senderId) => {
-    debugger
+    const { recipients } = this.state;
+    recipients.forEach((r)=>{
+      if(r.id==senderId){
+        r.unreaded_messages = true;
+      }
+    });
+    this.setState(()=>({ recipients: recipients}));
+  }
+
+  messagesReaded = (recipientId) => {
+    const { recipients } = this.state;
+    recipients.forEach((r)=>{
+      if(r.id==recipientId){
+        r.unreaded_messages = false;
+      }
+    });
+    this.setState(()=>({ recipients: recipients}));
   }
 
   render() {
@@ -76,15 +92,15 @@ class Messages extends React.Component {
 
     const recipientsRows = recipients.map((r)=> 
       <div key={ r.id } className="recipient-row">
-        <div>
-          {r.requester_avatar_50 && 
-            <img src={r.requester_avatar_50} className="img-circle header-avatar-img"/>
+        <Link to={`/messages/${r.id}`} className={r.unreaded_messages ? 'unreaded' : ''}>
+          {r.avatar_50 && 
+            <img src={r.avatar_50} className="img-circle header-avatar-img"/>
           }
-          {r.requester_avatar_50==null && 
+          {r.avatar_50==null && 
             <Icon icon={userCircle} />
           }
           {r.username}
-        </div>
+        </Link>
       </div>
     );
 
@@ -99,11 +115,14 @@ class Messages extends React.Component {
 
             </div>
             <div className="col-md-8 col-10">
-              <Switch>
-                <Route path={`${path}/:recipientId`}>
-                  <DetailMessage newUnreadMessage={this.newUnreadMessage} />
-                </Route>
-              </Switch>
+              { recipients.length>0 && 
+                <Switch>
+                  <Route path={`${path}/:recipientId`}>
+                    <DetailMessage newUnreadMessage={this.newUnreadMessage} 
+                                  messagesReaded={this.messagesReaded} />
+                  </Route>
+                </Switch>
+              }
 
             </div>
           </div>

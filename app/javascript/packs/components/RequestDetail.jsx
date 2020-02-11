@@ -105,7 +105,7 @@ class RequestDetail extends React.Component {
         </div>
         <div>{v.username}</div>
         <div>
-          <Link to={`/messages/1`}>
+          <Link to={`/messages/${v.id}`}>
             <Icon icon={baselineMessage} />
           </Link>
         </div>

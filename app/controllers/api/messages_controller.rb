@@ -7,7 +7,7 @@ class Api::MessagesController < ProtectedController
     sendersId = Message.select('DISTINCT sender_id').where('recipient_id=? AND readed=false', current_user.id)
 
     @recipients.each{|r|
-      if sendersId.any?{|s| s==r.id}
+      if sendersId.any?{|s| s.sender_id==r.id}
         r.unreaded_messages = true
       else
         r.unreaded_messages = false

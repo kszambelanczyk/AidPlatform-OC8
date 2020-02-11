@@ -36,12 +36,10 @@ class DetailMessage extends React.Component {
   };
 
   componentDidMount() {
+    console.log('didmount');
+
     const crf =  document.getElementsByName("csrf-token")[0].getAttribute("content");
     this.setState(()=>({crf: crf}));
-
-    this.loadMessages().then((messages)=>{
-      this.setState(()=>({messages: [...messages]}));
-    });
 
     const { currentUserId } = this.state;
     const pusher = new Pusher('9bee2ff5f008f8eb221f', {
@@ -51,6 +49,24 @@ class DetailMessage extends React.Component {
     this.channel = pusher.subscribe(`chat_user_${currentUserId}`);
     this.channel.bind('new_message', data => {
       this.processNewMessage(data.sender_id);
+    });
+
+    this.preloadMessages();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { recipientId } = this.props.match.params;
+    if (recipientId !== prevProps.match.params.recipientId) {
+      this.preloadMessages();
+    }
+  }
+
+  preloadMessages = () => {
+    const { messagesReaded } = this.props;
+    const { recipientId } = this.props.match.params;
+    this.loadMessages().then((messages)=>{
+      this.setState(()=>({messages: [...messages]}));
+      messagesReaded(recipientId);
     });
   }
 
