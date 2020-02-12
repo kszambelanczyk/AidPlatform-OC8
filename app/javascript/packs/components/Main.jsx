@@ -120,8 +120,10 @@ class Main extends React.Component {
     if(showNotification){
       notificationEl = (
         <div className="notification">
-          {notification}
-          <button onClick={this.closeNotification}>close</button>
+          <div>
+            {notification}
+            <button onClick={this.closeNotification}>x</button>
+          </div>
         </div>
       )
     }

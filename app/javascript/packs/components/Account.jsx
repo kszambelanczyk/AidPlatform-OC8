@@ -2,8 +2,9 @@ import React from 'react';
 import { useFormikContext, Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-
 import { withRouter } from 'react-router';
+import { Icon, InlineIcon } from '@iconify/react';
+import userCircle from '@iconify/icons-fa-solid/user-circle';
 
 
 const PasswordSchema = Yup.object().shape({
@@ -75,7 +76,8 @@ class Account extends React.Component {
     loading: false,
     isSubmitting: false,
     isFileSubmitting: false,
-    errors: {}
+    errors: {},
+    currentUserUsername: preloadedData.current_user_username,
   };
 
   componentDidMount() {
@@ -161,7 +163,7 @@ class Account extends React.Component {
       remove_avatar: false,
     }
 
-    const { isSubmitting, isFileSubmitting, errors } = this.state;
+    const { isSubmitting, isFileSubmitting, errors, currentUserUsername } = this.state;
     const { avatarUrl } = this.props;
 
     const errorMessages = [];
@@ -178,60 +180,74 @@ class Account extends React.Component {
       <>
         <section id="requests">
           <div className="container">
-            <p>Account</p>
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
 
-            <p>Avatar image</p>
-            <img src={avatarUrl} className="img-circle" />
+                <h4 className="text-center">Account</h4>
+                
+                <p>Username: { currentUserUsername }</p>
+                
+                <label>Avatar image</label><br/>
+                { avatarUrl && 
+                  <img src={avatarUrl} className="img-circle"/>
+                }
+                { avatarUrl==null && 
+                  <Icon icon={userCircle} />
+                }
 
-            <Formik
-              initialValues={ file }
-              validationSchema={ AvatarSchema }
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                this.onFileSubmit(values, { setSubmitting, resetForm })
-              }} >
-                <Form>
-                  <AutoSave avatarUrl={avatarUrl} />
-                  <div className="form-group">
-                    <label htmlFor="filename">Select avatar image</label>
-                    <Field name="filename" type="file" className="form-control-file" id="file-input" disabled={ isFileSubmitting ? true : false } />
-                    <ErrorMessage name="filename" component="div" className="text-danger"/>
-                  </div>
+                <Formik
+                  initialValues={ file }
+                  validationSchema={ AvatarSchema }
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    this.onFileSubmit(values, { setSubmitting, resetForm })
+                  }} >
+                    <Form>
+                      <AutoSave avatarUrl={avatarUrl} />
+                      <div className="form-group">
+                        <label htmlFor="filename">Select avatar image</label>
+                        <Field name="filename" type="file" className="form-control-file" id="file-input" disabled={ isFileSubmitting ? true : false } />
+                        <ErrorMessage name="filename" component="div" className="text-danger"/>
+                      </div>
 
-                </Form>
-            </Formik>
+                    </Form>
+                </Formik>
 
-            <p>Set new password</p>
-            {errorMessages}
+                <p>Set new password</p>
+                {errorMessages}
 
-            <Formik
-              initialValues={ user }
-              validationSchema={ PasswordSchema }
-              onSubmit={(values, { setSubmitting, resetForm }) => {
-                this.onSubmit(values, { setSubmitting, resetForm })
-              }} >
-              <Form>
-                <div className="form-group">
-                  <label htmlFor="current_password">Old password</label>
-                  <Field name="current_password" type="password" className="form-control" />
-                  <ErrorMessage name="current_password" component="div" className="text-danger"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">New password</label>
-                  <Field name="password" type="password" className="form-control" />
-                  <ErrorMessage name="password" component="div" className="text-danger"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password_confirmation">Repeat new password</label>
-                  <Field name="password_confirmation" type="password" className="form-control" />
-                  <ErrorMessage name="password_confirmation" component="div" className="text-danger"/>
-                </div>
+                <Formik
+                  initialValues={ user }
+                  validationSchema={ PasswordSchema }
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    this.onSubmit(values, { setSubmitting, resetForm })
+                  }} >
+                  <Form>
+                    <div className="form-group">
+                      <label htmlFor="current_password">Old password</label>
+                      <Field name="current_password" type="password" className="form-control" />
+                      <ErrorMessage name="current_password" component="div" className="text-danger"/>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="password">New password</label>
+                      <Field name="password" type="password" className="form-control" />
+                      <ErrorMessage name="password" component="div" className="text-danger"/>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="password_confirmation">Repeat new password</label>
+                      <Field name="password_confirmation" type="password" className="form-control" />
+                      <ErrorMessage name="password_confirmation" component="div" className="text-danger"/>
+                    </div>
 
 
-                <div className="text-center">
-                  <button type="submit" className="submit-button" disabled={isSubmitting} >{ isSubmitting ? 'Saving...' : 'Save' }</button>
-                </div>
-              </Form>
-            </Formik>
+                    <div className="text-center">
+                      <button type="submit" className="submit-button" disabled={isSubmitting} >{ isSubmitting ? 'Saving...' : 'Save' }</button>
+                    </div>
+                  </Form>
+                </Formik>
+
+              </div>
+            </div>
+
 
 
           </div>

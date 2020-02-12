@@ -438,3 +438,22 @@ section#map {
     background-color: #f4f3ef;
     text-align: center;
 }
+
+.notification {
+    position: fixed;
+    top: 50px;
+    text-align: center;
+    width: 100%;
+    color: $color1;
+    z-index: 100;
+    div {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: $color5;
+    }
+    button {
+        margin-left: 5px;
+        
+    }
+}
