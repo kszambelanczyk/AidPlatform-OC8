@@ -151,6 +151,22 @@ class VolunteerRequestDetail extends React.Component {
               </div>
 
               <p className="small-label">Place:</p>
+              <LoadScript id="script-loader"
+                googleMapsApiKey={ process.env.MAP_API }>
+                <GoogleMap
+                  mapContainerStyle={{
+                    height: "400px",
+                    width: "100%"
+                  }}
+                  zoom={13}
+                  center={{lat: request.lat, lng: request.lng}}
+                  options={{ streetViewControl:false }}
+                >
+                <Marker
+                  position={ {lat: request.lat, lng: request.lng} }
+                />
+                </GoogleMap>
+              </LoadScript>
 
             </>
           }

@@ -205,6 +205,7 @@ class Map extends React.Component {
             googleMapsApiKey={ process.env.MAP_API }>
 
             <GoogleMap id='google-map'
+              options={{ streetViewControl:false }}
               onLoad={ (m) => {this.mapLoaded(m)} }
               onIdle={ () => {this.onMapIdle()} }
             >

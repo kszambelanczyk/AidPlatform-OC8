@@ -37,7 +37,6 @@ const FormikAddress = (props) => {
 
   const doReverseGeocode = ({lat, lng}) => {
     setGeocoding(true);
-    // console.log(`Geocoding on ${lat} ${lng}`);
 
     return new Promise((resolve, reject) => {
       mapInstance.current.geocoder.geocode({location: {lat: lat, lng: lng}}, (results, status)=>{
@@ -57,7 +56,6 @@ const FormikAddress = (props) => {
       return;
     }
     mapInstance.current.map.setCenter({lat: latLng.lat, lng: latLng.lng});
-    // updateAddressFromLocation(latLng);
   }
 
   const mapLoaded = (m) => {
@@ -65,14 +63,12 @@ const FormikAddress = (props) => {
     mapInstance.current.geocoder = new google.maps.Geocoder;
 
     if(props.geolocationFinished && !values.id){
-      // console.log(`Center after map loaded for new`);
       centerMap({lat: values.lat, lng: values.lng});
       if(!values.id){
         updateAddressFromLocation({lat: values.lat, lng: values.lng});
       }
     } 
     if(values.id) {
-      // console.log(`Center after map loaded for edit`);
       centerMap({lat: values.lat, lng: values.lng});
     }
   }
@@ -100,8 +96,8 @@ const FormikAddress = (props) => {
               />
               </GoogleMap>
             </LoadScript>
-
           </div>
+          
           <div className="col-md-4">
             <div className="form-group">
               <textarea
