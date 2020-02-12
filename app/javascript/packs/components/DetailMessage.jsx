@@ -10,7 +10,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
-import Moment from 'react-moment'
+// import Moment from 'react-moment'
 import { Icon, InlineIcon } from '@iconify/react';
 import userCircle from '@iconify/icons-fa-solid/user-circle';
 
@@ -43,7 +43,7 @@ class DetailMessage extends React.Component {
     this.setState(()=>({crf: crf}));
 
     const { currentUserId } = this.state;
-    const pusher = new Pusher('9bee2ff5f008f8eb221f', {
+    const pusher = new Pusher(process.env.PUSHER_API, {
       cluster: 'eu',
       encrypted: true
     });

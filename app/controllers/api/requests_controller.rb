@@ -7,7 +7,7 @@ class Api::RequestsController < ProtectedController
       return
     end
 
-    @requests = Request.select("requests.*, COUNT(c1.id) as volunteer_count, COUNT(c2.id) as volunteered")
+    @requests = Request.includes(:requester).select("requests.*, COUNT(c1.id) as volunteer_count, COUNT(c2.id) as volunteered")
       .joins("LEFT JOIN volunteer_to_requests as c1 ON c1.request_id = requests.id")
       .joins("LEFT JOIN volunteer_to_requests as c2 ON c2.request_id = requests.id AND c2.volunteer_id=#{current_user.id}")
       .where("published IS TRUE AND

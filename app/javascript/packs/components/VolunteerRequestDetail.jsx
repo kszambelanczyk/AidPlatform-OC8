@@ -9,6 +9,7 @@ import baselineCheck from '@iconify/icons-ic/baseline-check';
 import baselineClose from '@iconify/icons-ic/baseline-close';
 import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
 import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 
 class VolunteerRequestDetail extends React.Component {
@@ -80,6 +81,10 @@ class VolunteerRequestDetail extends React.Component {
           { request && 
             <>
               <div className="request-menu">
+                <Link to={`/messages/${request.requester_id}`}>
+                  Message
+                </Link>
+
                 <a onClick={() => { this.toggleFulfilled(request) }} className={ request.volunteer_fulfilled ? 'text-success' : ''}>
                   <InlineIcon icon={ request.volunteer_fulfilled ? baselineCheck : baselineClose} /> Fulfilled
                 </a>
@@ -90,6 +95,17 @@ class VolunteerRequestDetail extends React.Component {
                 <div className="col-md-8">
                   <p className="small-label">Request type:</p>
                   <p>{ request.request_type=='one_time_task' ? 'One time task' : 'Material need' }</p>
+
+                  <p className="small-label">Requester:</p>
+                  <p className="requester-name">
+                    { request.requester_avatar_50 && 
+                      <img src={request.requester_avatar_50} className="img-circle header-avatar-img"/>
+                    }
+                    { request.requester_avatar_50==null && 
+                      <Icon icon={userCircle} />
+                    }
+                    { request.requester_username }
+                  </p>
 
                   <p className="small-label">Request title:</p>
                   <p>{ request.title }</p>
@@ -133,6 +149,8 @@ class VolunteerRequestDetail extends React.Component {
 
                 </div>
               </div>
+
+              <p className="small-label">Place:</p>
 
             </>
           }

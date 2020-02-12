@@ -8,12 +8,9 @@ import {
   Link,
 } from "react-router-dom";
 
-// import SimpleBar from 'simplebar-react';
-// import { Icon } from '@iconify/react';
-// import userIcon from '@iconify/icons-el/user';
-// import mapMarker from '@iconify/icons-mdi/map-marker';
-
-// import 'simplebar/dist/simplebar.min.css';
+import { Icon } from '@iconify/react';
+import userCircle from '@iconify/icons-fa-solid/user-circle';
+import Moment from 'react-moment'
 
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api'
 import Modal from 'simple-react-modal'
@@ -37,7 +34,7 @@ class Map extends React.Component {
 
 
   componentDidMount() {
-    const pusher = new Pusher('9bee2ff5f008f8eb221f', {
+    const pusher = new Pusher(process.env.PUSHER_API, {
       cluster: 'eu',
       encrypted: true
     });
@@ -202,7 +199,6 @@ class Map extends React.Component {
         <div>
           
           <div className="map-menu">
-            Map menu
             Unfulfilled requests: {requestsTotal}
           </div>
           <LoadScript id="script-loader"
@@ -232,7 +228,7 @@ class Map extends React.Component {
               containerClassName="request-detail-modal"
               show={requestForDetail ? true : false}
               onClose={this.closeDetailsModal}
-              containerStyle={{width: '600px'}}
+              // containerStyle={{width: '600px'}}
               >
               <div className="header">
                 <div className="title">
@@ -242,10 +238,43 @@ class Map extends React.Component {
               </div>
 
               <div className="content">
-                {requestForDetail.description}
-                <p>
-                  {requestForDetail.address}
-                </p>
+                { requestForDetail.is_my_request &&
+                  <div className="text-center text-success mb-2">This is your own request</div>
+                } 
+                { requestForDetail.volunteered &&
+                  <div className="text-center text-success mb-2">You already volunteered to this request</div>
+                } 
+                  
+                <div className="row">
+                  <div className="col-sm-7">
+                    <p className="small-label">Request type:</p>
+                    <p>{ requestForDetail.request_type=='one_time_task' ? 'One time task' : 'Material need' }</p>
+
+                    <p className="small-label">Place:</p>
+                    <p>{requestForDetail.address}</p>
+
+                  </div>
+                  <div className="col-sm-5">
+                    <p className="small-label">Requester:</p>
+                    <p className="requester-name">
+                      { requestForDetail.requester_avatar_50 && 
+                        <img src={requestForDetail.requester_avatar_50} className="img-circle header-avatar-img"/>
+                      }
+                      { requestForDetail.requester_avatar_50==null && 
+                        <Icon icon={userCircle} />
+                      }
+                      { requestForDetail.requester_username }
+                    </p>
+
+                    <p className="small-label">Published:</p>
+                    <p><Moment format="YYYY.MM.DD H:mm">{ requestForDetail.created_at }</Moment></p>
+
+                  </div>
+                </div>
+
+
+                <p className="small-label">Description:</p>
+                <p>{requestForDetail.description}</p>
 
               </div>
 

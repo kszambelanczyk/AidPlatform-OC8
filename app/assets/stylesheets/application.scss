@@ -411,9 +411,30 @@ section#map {
         #google-map {
             width: 100%;
             position: absolute;
-            top: 25px;
+            top: 24px;
             bottom: 0px;
             overflow: hidden;
         }
     }
+}
+
+.request-detail-modal {
+    @media screen and (max-width: 768px) {
+        width: 90%!important;
+    }
+    @media screen and (min-width: 768px) {
+        width: 1000px!important;
+    }
+}
+
+.requester-name {
+    margin-top: 3px;
+    :first-child {
+        margin-right: 10px;
+    }
+}
+
+.map-menu {
+    background-color: #f4f3ef;
+    text-align: center;
 }
