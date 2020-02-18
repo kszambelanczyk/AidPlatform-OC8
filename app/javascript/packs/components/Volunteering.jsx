@@ -107,7 +107,7 @@ class Volunteering extends React.Component {
     try {
       const result = await axios.post(`/api/requests/${requestId}/toggle_volunteer_fulfilled`, {}, { headers: {'X-CSRF-Token': crf } })
       request = result.data.request;
-      if(request.fulfilled){
+      if(request.volunteer_fulfilled){
         handleNotification("Successfully fulfilled request");
       } else {
         handleNotification("Successfully marked request as unfulfilled");
@@ -157,7 +157,7 @@ class Volunteering extends React.Component {
     );
 
     return (
-      <section id="requests">
+      <section id="volunteering">
         <div className="container pt-5">
           <div className="row">
             <div className="col-md-10 offset-md-1">
@@ -169,8 +169,8 @@ class Volunteering extends React.Component {
                 </div>
                 <div className="volunteers-request-grid">
                   { volunteersRows }
-                  { volunteersRows.length==0 ? 'none' : ''}
-                  { loadingVolunteers ? 'loading' : '' }
+                  { !loadingVolunteers && volunteersRows.length==0 ? 'none' : ''}
+                  { loadingVolunteers ? 'loading...' : '' }
                 </div>
               </Route>
 

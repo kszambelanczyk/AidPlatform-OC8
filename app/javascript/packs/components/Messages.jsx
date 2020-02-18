@@ -15,16 +15,6 @@ import { Icon, InlineIcon } from '@iconify/react';
 import userCircle from '@iconify/icons-fa-solid/user-circle';
 import DetailMessage from './DetailMessage';
 
-// import baselineDeleteForever from '@iconify/icons-ic/baseline-delete-forever';
-// import baselineEdit from '@iconify/icons-ic/baseline-edit';
-// import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
-// import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
-// import baselineCheck from '@iconify/icons-ic/baseline-check';
-// // import baselineClose from '@iconify/icons-ic/baseline-close';
-// import bxUserCheck from '@iconify/icons-bx/bx-user-check';
-// import Tooltip from 'rc-tooltip';
-
-
 
 class Messages extends React.Component {
   state = {

@@ -13,6 +13,8 @@ import {
 // import Moment from 'react-moment'
 import { Icon, InlineIcon } from '@iconify/react';
 import userCircle from '@iconify/icons-fa-solid/user-circle';
+// import ReactResizeDetector from 'react-resize-detector';
+
 
 // import baselineDeleteForever from '@iconify/icons-ic/baseline-delete-forever';
 // import baselineEdit from '@iconify/icons-ic/baseline-edit';
@@ -55,6 +57,10 @@ class DetailMessage extends React.Component {
     this.preloadMessages();
     this.getCurrentRecipient();
 
+  }
+
+  componentWillUnmount(){
+    this.channel.unbind();
   }
 
   componentDidUpdate(prevProps) {
@@ -169,6 +175,10 @@ class DetailMessage extends React.Component {
     el.scrollTop = el.scrollHeight;
   }
 
+  onResize = (a,b) => {
+    // debugger;
+  }
+
   render() {
     const { messages, loading, pushing, currentMessage, messageValid, currentUserId, currentRecipient } = this.state;
     // const { path, url } = this.props.match;
@@ -205,6 +215,7 @@ class DetailMessage extends React.Component {
 
     return (
       <div>
+
         <div className="recipient-detail">
           { currentRecipient &&
             <>
@@ -221,15 +232,15 @@ class DetailMessage extends React.Component {
           }
         </div>
 
-        <div className="recipient-list">
-          <SimpleBar style={{ maxHeight: 500, minHeight: 500 }} >
+        <div className="recipient-message-list">
+          <SimpleBar style={{ height: "100%" }} >
             {messagesRows}
           </SimpleBar>
         </div>
 
         <div className="input-place pt-3">
-          <textarea value={currentMessage} onChange={this.handleMessageChange} disabled={pushing} />
-          <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing}>Sent</button>
+          <textarea value={currentMessage} onChange={this.handleMessageChange} disabled={pushing} className="form-control" />
+          <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing} className="btn btn-my">Sent</button>
         </div>
       </div>
     );

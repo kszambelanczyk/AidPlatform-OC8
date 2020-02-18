@@ -3,7 +3,6 @@ import axios from 'axios';
 import { withRouter } from 'react-router';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-// import SimpleBar from 'simplebar-react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,11 +16,9 @@ import baselineEdit from '@iconify/icons-ic/baseline-edit';
 import baselineVisibility from '@iconify/icons-ic/baseline-visibility';
 import baselineVisibilityOff from '@iconify/icons-ic/baseline-visibility-off';
 import baselineCheck from '@iconify/icons-ic/baseline-check';
-// import baselineClose from '@iconify/icons-ic/baseline-close';
 import bxUserCheck from '@iconify/icons-bx/bx-user-check';
 import Tooltip from 'rc-tooltip';
-
-// import 'rc-tooltip/assets/bootstrap_white.css';
+import Pusher from 'pusher-js';
 
 import RequestDetail from './RequestDetail';
 
@@ -31,14 +28,18 @@ class Requests extends React.Component {
     loadingRequests: false,
     requests: [],
     crf: '',
+    currentUserId: preloadedData.current_user_id,
+
   };
 
   componentDidMount() {
+
     const crf =  document.getElementsByName("csrf-token")[0].getAttribute("content");
     this.setState(()=>({crf: crf}));
 
     this.loadRequests();
   }
+
 
   loadRequests = () => {
     // const { showFulfilled } = this.state;
@@ -204,9 +205,9 @@ class Requests extends React.Component {
                 </div>
                 <div className="requests-grid">
                   { reqestRows }
-                  { reqestRows.length==0 ? 'none' : ''}
+                  { !loadingRequests && reqestRows.length==0 ? 'none' : ''}
 
-                  { loadingRequests ? 'loading' : '' }
+                  { loadingRequests ? 'loading...' : '' }
                 </div>
               </Route>
 

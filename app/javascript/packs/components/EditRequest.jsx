@@ -40,7 +40,8 @@ class EditRequest extends React.Component {
     } 
     return (
       <section id="requests">
-        <div className="container">
+        <div className="container pt-5 pb-3">
+          <h4>Edit request</h4>
           <RequestForm request={request} 
                       geolocationFinished={geolocationFinished}
                       geolocated_lat={geolocated_lat}

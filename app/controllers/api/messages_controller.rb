@@ -51,6 +51,10 @@ class Api::MessagesController < ProtectedController
       sender_id: current_user.id
     })
 
+    Pusher.trigger("user_#{params[:recipient_id]}", "new_message", {
+      sender_username: current_user.username
+    })
+
     @messages = read_messages(params[:recipient_id], params[:last_message_id])
     render :user
 end
@@ -84,7 +88,6 @@ end
       .joins("LEFT JOIN volunteer_to_requests ON volunteer_to_requests.volunteer_id = users.id")
       .joins("JOIN requests ON volunteer_to_requests.request_id = requests.id")
       .where("requests.requester_id=?", current_user.id)
-    # recipients += volunteering_people.to_a
     volunteering_people.each {|r| 
       if recipients.none?{|r2| r2.id==r.id}
         recipients << r

@@ -76,7 +76,7 @@ class VolunteerRequestDetail extends React.Component {
 
     return (
       <>
-        <p><Link to={'/volunteering'}>&lt;- all volunteering</Link></p>
+        <Link to={'/volunteering'} className="link-black">&lt;- All volunteering</Link>
         <div className="request-detail">
           { request && 
             <>

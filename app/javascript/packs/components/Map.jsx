@@ -2,12 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 import Pusher from 'pusher-js';
-
 import {
   BrowserRouter as Router,
   Link,
 } from "react-router-dom";
-
 import { Icon } from '@iconify/react';
 import userCircle from '@iconify/icons-fa-solid/user-circle';
 import Moment from 'react-moment'
@@ -29,11 +27,13 @@ class Map extends React.Component {
     requestSelected: null,
     requestForDetail: null,
     infoWindowOpen: false,
-    requestsTotal: 0
+    requestsTotal: 0,
+    currentUserId: preloadedData.current_user_id,
   };
 
 
   componentDidMount() {
+
     const pusher = new Pusher(process.env.PUSHER_API, {
       cluster: 'eu',
       encrypted: true
@@ -52,7 +52,7 @@ class Map extends React.Component {
   componentWillUnmount() {
     this.props.storeLastPos(this.map.getCenter().lat(), this.map.getCenter().lng(), this.map.getZoom());
 
-    this.channel.unbind_all();
+    this.channel.unbind();
   }
 
   componentDidUpdate(prevProps) {
@@ -281,18 +281,16 @@ class Map extends React.Component {
 
               <div className="footer">
                 { requestForDetail.is_my_request &&
-                  <Link to={`/requests/${requestForDetail.id}`} className="btn btn-primary">Details</Link>
-                  // <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                  <Link to={`/requests/${requestForDetail.id}`} className="btn btn-my">Details</Link>
                 }
                 { !requestForDetail.is_my_request && !requestForDetail.volunteered && 
-                  <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                  <button className="btn btn-my" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
                 }
                 { !requestForDetail.is_my_request && requestForDetail.volunteered && 
-                  <Link to={`/volunteering/${requestForDetail.id}`} className="btn btn-primary">Details</Link>
-                  // <button className="volunteer-btn" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                  <Link to={`/volunteering/${requestForDetail.id}`} className="btn btn-my">Details</Link>
                 }
                 
-                <button className="cancel-btn" onClick={this.closeDetailsModal}>Close</button>
+                <button className="btn btn-cancel" onClick={this.closeDetailsModal}>Close</button>
               </div>
             </Modal>
           }

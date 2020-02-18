@@ -114,7 +114,7 @@ class RequestDetail extends React.Component {
 
     return (
       <>
-        <p><Link to={'/requests'}>&lt;- all requests</Link></p>
+        <Link to={'/requests'} className="link-black">&lt;- All requests</Link>
         <div className="request-detail">
           { request && 
             <>

@@ -85,8 +85,6 @@ class RequestForm extends React.Component {
   }
 
   render() {
-    console.log('rerender');
-
     const { isSubmitting } = this.state;
     const { request, geolocationFinished } = this.props;
 
@@ -124,7 +122,7 @@ class RequestForm extends React.Component {
               <FormikAddress geolocationFinished={geolocationFinished} />
 
               <div className="text-center">
-                <button type="submit" className="submit-button" disabled={isSubmitting} >{ isSubmitting ? 'Submitting...' : 'Submit' }</button>
+                <button type="submit" className="btn btn-my mt-2" disabled={isSubmitting} >{ isSubmitting ? 'Submitting...' : 'Submit' }</button>
               </div>
             </Form>
           </Formik>

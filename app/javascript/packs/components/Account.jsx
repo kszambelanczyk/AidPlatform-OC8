@@ -57,13 +57,15 @@ const AutoSave = ({ avatarUrl }) => {
   );
 
   const button = (
-    <button type="button" onClick={ ()=>{ removeAvatarCallback() } }>Remove avatar image</button>
+    <button type="button" className="btn btn-sm btn-my" onClick={ ()=>{ removeAvatarCallback() } }>Remove avatar image</button>
   );
 
   return (
     <>     
-      {
-        avatarUrl ? button : ''
+      { avatarUrl &&
+        <div className="text-center pt-2">
+          { button }
+        </div>
       }
     </>
   );
@@ -178,22 +180,24 @@ class Account extends React.Component {
 
     return (
       <>
-        <section id="requests">
-          <div className="container">
+        <section id="account">
+          <div className="container pt-5">
             <div className="row">
               <div className="col-md-8 offset-md-2">
 
-                <h4 className="text-center">Account</h4>
+                <h4 className="text-center">Account for: { currentUserUsername }</h4>
                 
-                <p>Username: { currentUserUsername }</p>
+                {/* <p>Username: { currentUserUsername }</p> */}
                 
-                <label>Avatar image</label><br/>
-                { avatarUrl && 
-                  <img src={avatarUrl} className="img-circle"/>
-                }
-                { avatarUrl==null && 
-                  <Icon icon={userCircle} />
-                }
+                <h5 className="pt-4 pb-3">Avatar image</h5>
+                <div className="text-center">
+                  { avatarUrl && 
+                    <img src={avatarUrl} className="img-circle"/>
+                  }
+                  { avatarUrl==null && 
+                    <h2><Icon icon={userCircle} /></h2>
+                  }
+                </div>
 
                 <Formik
                   initialValues={ file }
@@ -203,16 +207,21 @@ class Account extends React.Component {
                   }} >
                     <Form>
                       <AutoSave avatarUrl={avatarUrl} />
-                      <div className="form-group">
+                      {/* <div className="form-group">
                         <label htmlFor="filename">Select avatar image</label>
                         <Field name="filename" type="file" className="form-control-file" id="file-input" disabled={ isFileSubmitting ? true : false } />
                         <ErrorMessage name="filename" component="div" className="text-danger"/>
+                      </div> */}
+
+                      <div className="custom-file mt-2">
+                        <Field name="filename" type="file" className="custom-file-input" id="file-input" disabled={ isFileSubmitting ? true : false } />
+                        <label className="custom-file-label" htmlFor="file-input">Choose file...</label>
                       </div>
 
                     </Form>
                 </Formik>
 
-                <p>Set new password</p>
+                <h5 className="pt-5 pb-3">Set new password</h5>
                 {errorMessages}
 
                 <Formik
@@ -240,7 +249,7 @@ class Account extends React.Component {
 
 
                     <div className="text-center">
-                      <button type="submit" className="submit-button" disabled={isSubmitting} >{ isSubmitting ? 'Saving...' : 'Save' }</button>
+                      <button type="submit" className="btn btn-my" disabled={isSubmitting} >{ isSubmitting ? 'Saving...' : 'Save' }</button>
                     </div>
                   </Form>
                 </Formik>

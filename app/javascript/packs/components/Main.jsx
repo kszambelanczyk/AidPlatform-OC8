@@ -14,6 +14,7 @@ import NewRequest from './NewRequest';
 import EditRequest from './EditRequest';
 import Account from './Account';
 import Messages from './Messages';
+import Pusher from 'pusher-js';
 
 
 class Main extends React.Component {
@@ -33,11 +34,14 @@ class Main extends React.Component {
     avatarImg: preloadedData.avatar_img_url,
     avatarImgThumb25: preloadedData.avatar_img_25_url,
     avatarImgThumb50: preloadedData.avatar_img_50_url,
-    avatarImgThumb128: preloadedData.avatar_img_128_url
+    avatarImgThumb128: preloadedData.avatar_img_128_url,
+    currentUserId: preloadedData.current_user_id
 };
 
 
   componentDidMount() {
+    const { currentUserId } = this.state;
+
     this.getCurrentLocation().then((pos) => {
       this.setState(() => ({ 
         current_lat: pos.lat, 
@@ -48,7 +52,31 @@ class Main extends React.Component {
     }).finally(()=>{
       this.setState(() => ({ geolocationFinished: true }));
     });
+
+    const pusher = new Pusher(process.env.PUSHER_API, {
+      cluster: 'eu',
+      encrypted: true
+    });
+    this.channelUser = pusher.subscribe(`user_${currentUserId}`);
+    this.channelUser.bind('new_message', data => {
+      const { location } = this.props;
+      // do not show the message if in /messages... url
+      if(!/^\/messages/.test(location.pathname)){
+        this.handleNotification(`New message from: ${data.sender_username}`);
+      }
+    });
+    this.channelUser.bind('new_volunteer', data => {
+      this.handleNotification('You have new volunteer for one of yours request');
+    });
+    this.channelUser.bind('marked_as_fullfiled', data => {
+      this.handleNotification('One of your request has been marked as fulfilled by the volunteer');
+    });
   }
+
+  componentWillUnmount() {
+    this.channelUser.unbind();
+  }
+
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {

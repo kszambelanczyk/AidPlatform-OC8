@@ -31,10 +31,20 @@ $color5: #212529;
 
 html {
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
     font-family: 'Playfair Display', serif;
+    height: 100%;
+    background-color: $bgcolor;
+
+}
+
+a.link-black {
+    color: $color5;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 #top-home {
@@ -123,6 +133,7 @@ body {
 }
 
 #main-app {
+    // height: 100%;
     background-color: $bgcolor;
     a.navbar-brand {
         font-size: 1.4rem;
@@ -377,17 +388,70 @@ body {
 }
 
 #messages {
+    position: absolute;
+    top: 61px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    .container-md, .row {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .row {
+        @media screen and (max-width: 768px) {
+            margin: 20px 15px 0px 15px;
+        }
+        @media screen and (min-width: 768px) {
+            margin: 48px 15px 0px 15px;
+        }
+    
+    }
+
     .left-column {
         border-right: 1px solid $color2;
     }
+    .recipient-message-list {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        bottom: 85px;
+        left: 0;
+        padding: 10px;
+    }
+
     .recipient-detail {
         border-bottom: 1px solid $color2;
         margin-bottom: 1rem;
         :first-child {
             margin-right: 1rem;
         }
-        // padding: 1rem;
     }
+    
+    .input-place {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        padding-right: 20px;
+        display: flex;
+        button {
+            margin-left: 10px;
+        }
+    }
+
+}
+
+.btn-my {
+    background-color: $color2;
+    color: black;
+}
+
+.btn-cancel {
+    background-color: $color1;
+    color: $color4;
+
 }
 
 a.tooltip-link {

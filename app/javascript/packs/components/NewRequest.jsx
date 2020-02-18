@@ -19,7 +19,8 @@ class NewRequest extends React.Component {
     return (
       <>
         <section id="requests">
-          <div className="container">
+          <div className="container pt-5 pb-3">
+            <h4>New request</h4>
             <RequestForm request={newRequest}  
                           geolocationFinished={geolocationFinished}
                           geolocated_lat={geolocated_lat}

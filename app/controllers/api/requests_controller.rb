@@ -139,6 +139,10 @@ class Api::RequestsController < ProtectedController
     @request.update_published_state()
     @request.save
 
+    Pusher.trigger("user_#{@request.requester_id}", "new_volunteer", {
+      volunteer_username: current_user.username
+    })
+
   end
 
   def unvolunteer
@@ -222,11 +226,11 @@ class Api::RequestsController < ProtectedController
     @request = Request.find(params[:id])
 
     if (@request.requester_id == current_user.id)
-      render json: { errors:  ['Can not volunteer fulfill your own request'] }, status: :unprocessable_entity
+      render json: { errors:  ['Can not fulfill this request'] }, status: :unprocessable_entity
       return
     end
 
-    volunteer_to_request = current_user.volunteer_to_requests.find { |v| v.request_id=@request.id}
+    volunteer_to_request = VolunteerToRequest.where('request_id=? and volunteer_id=?',@request.id, current_user.id).first
     unless volunteer_to_request
       render json: { errors:  ['You did not volunteer to that request'] }, status: :unprocessable_entity
       return
@@ -240,6 +244,13 @@ class Api::RequestsController < ProtectedController
         @request.update_published_state()
         result = result && @request.save
         raise "Transaction Failed" unless result
+
+        if volunteer_to_request.fulfilled 
+          Pusher.trigger("user_#{@request.requester_id}", "marked_as_fullfiled", {
+            request_id: @request.id
+          })    
+        end
+
       end
     rescue => e
       render json: {errors:e}, status: :unprocessable_entity
