@@ -63,7 +63,10 @@ class VolunteerRequestDetail extends React.Component {
   unvolunteerClicked = (request) => {
     this.setState(()=>({isAsync:true}), ()=>{
       this.props.requestUnvolunteerClicked(request).then(()=>{
-        this.setState(()=>({isAsync:false}));
+        // after unvolunteer
+        // we are switching routes so this component is beeing unmounted
+        // and we do not need to turn this flag off
+        // this.setState(()=>({isAsync:false}));
       },()=>{
         this.setState(()=>({isAsync:false}));
       });

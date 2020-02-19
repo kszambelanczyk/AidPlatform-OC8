@@ -29,6 +29,7 @@ class Map extends React.Component {
     infoWindowOpen: false,
     requestsTotal: 0,
     currentUserId: preloadedData.current_user_id,
+    isAsync: false,
   };
 
 
@@ -150,20 +151,24 @@ class Map extends React.Component {
       }
     }
 
+    this.setState(()=>({isAsync: true}));
     axios.post(url, {}, config)
       .then(res => {
         handleNotification('Succefully volunteered to request');
         const { history } = this.props;
+        this.setState(()=>({isAsync: false}));
         history.push(`/volunteering/${request.id}`);
     
       }, (error)=>{
+        this.setState(()=>({isAsync: false}));
         handleNotification('Volunteer failed');
         console.error(error);
       });
-  }
+    
+   }
 
   render() {
-    const { requests, requestsTotal, requestSelected, requestForDetail, infoWindowOpen } = this.state;
+    const { requests, requestsTotal, requestSelected, requestForDetail, infoWindowOpen, isAsync } = this.state;
     const markerList =  requests.map((r)=> {
       let url;
       if(r.request_type=='one_time_task'){
@@ -284,7 +289,7 @@ class Map extends React.Component {
                   <Link to={`/requests/${requestForDetail.id}`} className="btn btn-my">Details</Link>
                 }
                 { !requestForDetail.is_my_request && !requestForDetail.volunteered && 
-                  <button className="btn btn-my" onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
+                  <button className="btn btn-my" disabled={ isAsync ? true : false } onClick={ () => { this.volunteerToRequest(requestForDetail) } }>Lets do it!</button>
                 }
                 { !requestForDetail.is_my_request && requestForDetail.volunteered && 
                   <Link to={`/volunteering/${requestForDetail.id}`} className="btn btn-my">Details</Link>

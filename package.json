@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@babel/preset-react": "^7.7.4",
+    "@fortawesome/fontawesome-free": "^5.12.1",
     "@iconify/icons-bx": "^1.0.0",
     "@iconify/icons-fa-solid": "^1.0.6",
     "@iconify/icons-ic": "^1.0.8",

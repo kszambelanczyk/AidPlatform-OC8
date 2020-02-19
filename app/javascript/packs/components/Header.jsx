@@ -39,7 +39,7 @@ class Header extends React.Component {
     }
   
     return (
-      <section>
+      <section id="header">
         <div className="header">      
           <nav className="navbar navbar-expand-md">
             <div className="container">
