@@ -240,7 +240,7 @@ class DetailMessage extends React.Component {
 
         <div className="input-place pt-3">
           <textarea value={currentMessage} onChange={this.handleMessageChange} disabled={pushing} className="form-control" />
-          <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing} className="btn btn-my">Sent</button>
+          <button onClick={this.sendButtonClicked} type="button" disabled={!messageValid || pushing} className="btn btn-my">Send</button>
         </div>
       </div>
     );
