@@ -80,7 +80,7 @@ class VolunteerRequestDetail extends React.Component {
     return (
       <>
         <Link to={'/volunteering'} className="link-black">&lt;- All volunteering</Link>
-        <div className="request-detail">
+        <div className="request-detail pb-3">
           { request && 
             <>
               <div className="request-menu">

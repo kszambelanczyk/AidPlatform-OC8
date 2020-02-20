@@ -43,7 +43,7 @@ class Api::RequestsController < ProtectedController
       .where("requester_id=?", current_user.id)
       .group("requests.id")
       .order("requests.created_at DESC")
-    
+
     @requests_count = Request.where('requester_id=?', current_user.id).count
   end
 
