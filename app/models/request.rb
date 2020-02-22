@@ -13,7 +13,7 @@ class Request < ApplicationRecord
   }
 
   validates :title, presence: true, length: { minimum: 2, maximum: 50 }
-  validates :description, presence:true, length: { minimum: 2, maximum: 300 }
+  validates :description, presence:true, length: { minimum: 2, maximum: 500 }
   validates :lnglat, presence: true
   validates :address, presence: true
   validates_inclusion_of :request_type, in: [ REQUEST_TYPES[:one_time_task], REQUEST_TYPES[:material_need] ]

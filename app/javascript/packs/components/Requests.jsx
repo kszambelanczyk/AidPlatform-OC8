@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+// import 'react-confirm-alert/src/react-confirm-alert.css';
 import {
   BrowserRouter as Router,
   Switch,

@@ -122,10 +122,12 @@ class Map extends React.Component {
   }
 
   markerClicked = (request) => {
-    this.setState(()=>({
-      requestSelected: request,
-      infoWindowOpen: true,
-    }));
+    // this.setState(()=>({
+    //   requestSelected: request,
+    //   infoWindowOpen: true,
+    // }));
+    this.setState(()=>({requestForDetail: request}));
+
   }
 
   handleInfoWindowClose = () => {

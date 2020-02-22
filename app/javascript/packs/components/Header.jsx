@@ -43,7 +43,7 @@ class Header extends React.Component {
         <div className="header">      
           <nav className="navbar navbar-expand-md">
             <div className="container">
-              <a className="navbar-brand" href="/">
+              <a className="navbar-brand" href="/main">
                 Thank.You
               </a>
               <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
