@@ -28,7 +28,7 @@ RSpec.describe Request, type: :model do
     end
 
     it "is not valid with a title beeing too long" do
-      subject.title = "sdfh ljksl sdjldsflk lkkjsgd slk sklhs lkdsgds sdlkh sdgflkdsfgl dsklgds klhdsg"
+      subject.title = "s" * 60
       expect(subject).to_not be_valid
     end
 
@@ -43,10 +43,7 @@ RSpec.describe Request, type: :model do
     end
 
     it "is not valid with a description beeing too long" do
-      subject.description = "sdfh ljksl sdjldsflk lkkjsgd slk sklhs lkdsgds sdlkh sdgflkdsfgl dsklgds klhdsg
-        sdfh ljksl sdjldsflk lkkjsgd slk sklhs lkdsgds sdlkh sdgflkdsfgl dsklgds klhdsg
-        sdfh ljksl sdjldsflk lkkjsgd slk sklhs lkdsgds sdlkh sdgflkdsfgl dsklgds klhdsg
-        sdfh ljksl sdjldsflk lkkjsgd slk sklhs lkdsgds sdlkh sdgflkdsfgl dsklgds klhdsg"
+      subject.description = "s" * 310
       expect(subject).to_not be_valid
     end
 
