@@ -13,7 +13,7 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.2.2",
     "@react-google-maps/api": "^1.8.1",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.4.1",
     "dotenv": "^8.2.0",
